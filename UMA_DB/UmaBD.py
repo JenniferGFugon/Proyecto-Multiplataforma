@@ -28,7 +28,7 @@ class connect:
                     """)
         #tabla Repuesto
         micursor.execute("""CREATE TABLE IF NOT EXISTS Repuesto(
-                                            idRepuesto  INTEGER INDENTITY   NOT NULL,
+                                            idRepuesto  INTEGER IDENTITY   NOT NULL,
                                             marca       TEXT(50)            NOT NULL,
                                             modelo      TEXT(50)            NOT NULL,
                                             fabricante  TEXT(50)            NOT NULL,
@@ -37,6 +37,32 @@ class connect:
                                             precioVenta NUMERIC(9,2)           NOT NULL         
                                             )
                      """)
+
+        #tabla Empleado
+        micursor.execute("""CREATE TABLE IF NOT EXIST Empleado (
+                                            idEmpleado INTEGER IDENTITY NOT NULL,
+                                            identidadEmpleado TEXT(15) NOT NULL,
+                                            nombreEmpleado    TEXT(50) NOT NULL,
+                                            TelefonoEmpleado  TEXT(9)  NOT NULL,
+                                            celularEmpleado   TEXT(9)  NOT NULL,
+                                            RTN               TEXT(15) NOT NULL,
+                                            direccionEmpleado TEXT(100)NOT NULL,
+                                            CorreoEmpleado    TEXT(100)NOT NULL,
+                                            UserName          TEXT(10) NOT NULL,
+                                            Password          TEXT(10) NOT NULL
+                                            )
+                    """)
+        #tabla Servicio 
+        micursor.execute("""CREATE TABLE IF NOT EXIST Servicio (
+                                            idServicio INTEGER IDENTITY NOT NULL,
+                                            NombreServicio TEXT(50)     NOT NULL,
+                                            PrecioVenta NUMERIC(9,2)    NOT NULL
+                                            )
+        
+        
+        
+        
+                    """)
         conn.close()
 
 if __name__ == "__main__":
