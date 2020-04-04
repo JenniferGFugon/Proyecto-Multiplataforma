@@ -91,6 +91,8 @@ class Menu(QWidget):
         btn_empleados.move(415, 135)
         btn_empleados.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
+        btn_empleados.clicked.connect(self.principalEmpleado)
+        btn_empleados.show();                                 
 
     #------------PANTALLA INVENTARIO---------------------
     def UI2(self):
@@ -375,7 +377,101 @@ class Menu(QWidget):
         self.top_layout.addWidget(self.encabezado())
 
         self.setLayout(self.main_layout)
+
+
+    #-----------PANTALLA EMPLEADOS-------------------
         
+        
+
+    def principalEmpleado(self):
+        """ Componentes del diseño de la ventana """
+        paleta = QPalette()
+        paleta.setColor(QPalette.Background, QColor(229, 25, 25))
+        self.setPalette(paleta)
+        self.setWindowTitle("Empleados")
+        self.setGeometry(430, 110, 700, 600)
+        self.encabezadoEmpleado()
+        self.botonesEmpleado()
+        self.layoutsEmpleado()
+
+
+    def encabezadoEmpleado(self):
+        """ Encabezado de la ventana """
+        paleta = QPalette()
+        paleta.setColor(QPalette.Background, QColor(0, 0, 0))
+
+        frame = QFrame(self)
+        frame.setFrameShape(QFrame.NoFrame)
+        frame.setFrameShadow(QFrame.Sunken)
+        frame.setAutoFillBackground(True)
+        frame.setPalette(paleta)
+        frame.setFixedWidth(1400)
+        frame.setFixedHeight(74)
+        frame.move(0, 0)
+
+        logo = QLabel(frame)
+        logo.setFixedWidth(90)
+        logo.setFixedHeight(50)
+        logo.setPixmap(QPixmap("Logo.png").scaled(90, 90, Qt.KeepAspectRatio,
+                                                         Qt.SmoothTransformation))
+        logo.move(570, 1)
+
+        font = QFont()
+        font.setPointSize(19)
+        font.setBold(True) 
+
+        lbl_titulo = QLabel("<font color='white'>Empleados</font>", frame)
+        lbl_titulo.setFont(font)
+        lbl_titulo.move(545, 40)
+
+    def botonesEmpleado(self):
+        """ Botones que conforman la ventana de empleados """
+        self.lista_empleados = QListWidget()
+        self.btn_editar_empleado = QPushButton("Editar Empleado")
+        self.btn_editar_empleado.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                         "color: \'white\';")
+        self.btn_editar_empleado.setFixedWidth(165)
+        self.btn_editar_empleado.setFixedHeight(40)
+
+        self.btn_eliminar_empleado = QPushButton("Eliminar Empleado")
+        self.btn_eliminar_empleado.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                         "color: \'white\';")
+        self.btn_eliminar_empleado.setFixedWidth(165)
+        self.btn_eliminar_empleado.setFixedHeight(40)
+
+        self.btn_menu = QPushButton("Menu Principal")
+        self.btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                         "color: \'white\';")
+        self.btn_menu.clicked.connect(self.llamar_menu)
+        self.btn_menu.setFixedWidth(165)
+        self.btn_menu.setFixedHeight(40)
+
+
+    def layoutsEmpleado(self):
+        """ Layouts que componen la aplicación. """
+        # Layouts
+        self.main_layout = QHBoxLayout()
+        self.left_layout = QFormLayout()
+        self.right_main_layout = QVBoxLayout()
+        self.right_top_layout = QHBoxLayout()
+        self.right_bottom_layout = QHBoxLayout()
+        self.top_layout = QVBoxLayout()
+
+        self.right_main_layout.addLayout(self.right_top_layout)
+        self.right_main_layout.addLayout(self.right_bottom_layout)
+        self.main_layout.addLayout(self.left_layout, 70)
+        self.main_layout.addLayout(self.right_main_layout, 30)
+        self.main_layout.addLayout(self.top_layout)
+        
+        self.left_layout.addWidget(self.lista_empleados)
+        self.right_top_layout.addWidget(self.btn_editar_empleado)
+        self.right_main_layout.addWidget(self.btn_menu)
+        self.right_bottom_layout.addWidget(self.btn_eliminar_empleado)
+        self.top_layout.addWidget(self.encabezado())
+
+        self.setLayout(self.main_layout)    
+
+
     def llamar_menu(self):
         self.call = self.Menu()
         self.close()
