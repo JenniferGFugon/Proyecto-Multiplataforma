@@ -53,7 +53,7 @@ class VentaDB:
         self.producto_query ="""CREATE TABLE IF NOT EXISTS producto ( 
                                     idProducto  integer PRIMARY KEY AUTOINCREMENT,
                                     idCategoriaProducto  integer  NOT NULL,
-                                    nombreProducto  text(50) NOT NULL,
+                                    nombreProducto  text NOT NULL,
                                     precioCompra numeric NOT NULL ,
                                     precioVenta numeric NOT NULL,
                                     cantidad numeric NOT NULL
