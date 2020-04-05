@@ -6,7 +6,7 @@ conn = sqlite3.connect('UMA_DB/uma')
 micursor = conn.cursor()
 
 
-class connect:
+class EmpleadoDB:
     """Crea la base de datos uma"""
         
     def Create_tables(self):
@@ -49,7 +49,7 @@ class connect:
                                             direccionEmpleado TEXT(100)NOT NULL,
                                             CorreoEmpleado    TEXT(100)NOT NULL,
                                             UserName          TEXT(10) NOT NULL,
-                                            Password          TEXT(10) NOT NULL
+                                            Pass             TEXT(10) NOT NULL
                                             )
                     """)
         #tabla Servicio 
