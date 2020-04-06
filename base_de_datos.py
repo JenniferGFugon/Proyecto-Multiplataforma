@@ -24,7 +24,7 @@ class VentaDB:
     def queryTabla(self,conexión):
 
         self.venta_query = """ CREATE TABLE IF NOT EXISTS venta (
-                                    id integer PRIMARY KEY AUTOINCREMENT ,
+                                    id integer PRIMARY KEY AUTOINCREMENT,
                                     id_cliente integer NOT NULL,
                                     id_empleado integer NOT NULL,
                                     total numeric NOT NULL 
@@ -102,10 +102,33 @@ class VentaDB:
         except Error as e:
             print(e)
 
+    #------------------ELIMINACION EN TABLAS-----------------
+    #------------------TABLA EMPLEADOS----------------------
+    def eliminar_empleado(self, id):
+        """
+        Elimina un empleado mediante el valor de la identidad.
 
+        param: id: El valor del registro del empleado.
+        :return: True si el empleado se eliminó. None en caso contrario.
+        """
+        sqlQuery = "DELETE FROM empleado WHERE idEmpleado =  ? ; "
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery, (id,))
+            self.connection.commit()
+
+            return True
+        except Error as e:
+            print(e)
+
+        return None
+
+    #---------------OBTENCION DE DATOS DE LAS TABLAS---------
+    #------------------TABLA EMPLEADOS-----------------------
     def obtenerEmpleados(self):
         """ Obtiene todas las tuplas de la tabla empleado """
-        sqlQuery = " SELECT * FROM empleado ORDER BY ROWID ASC "
+        sqlQuery = " SELECT *FROM empleado ORDER BY ROWID ASC "
 
         try:
             cursor = self.connection.cursor()
@@ -116,6 +139,50 @@ class VentaDB:
             print(e)
 
         return None
+
+
+    #------------------MODIFICACION DE TABLAS---------------
+    #---------------------TABLA EMPLEADOS-------------------
+    def modificarEmpleadoPorId(self,empleado):
+        '''Modifica datos del empleado
+        Parametros : id  del cliente del cual se modificaran 
+        los datos'''
+        sqlQuery = """update empleado
+                        SET nombreEmpleado =?,
+                        identidadEmpleado =?,
+                        telefonoEmpleado = ?,
+                        direccionEmpleado = ?,
+                        correoEmpleado = ?,
+                        userName = ?,
+                        pass = ?
+                        WHERE idEmpleado = ?;"""
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery,empleado)
+            self.connection.commit()
+        except Error as e:
+            print(e)            
+
+
+    def obtenerEmpleadosPorId(self, id):
+        """
+        Busca un empleado mediante el valor de la identidad.
+
+        param: id: El valor del id del empleado.
+        :return: Un arreglo con los atributos del empleado.
+        """
+        sqlQuery = " SELECT *FROM empleado WHERE idEmpleado =  ? ;"
+
+        try:
+            cursor = self.connection.cursor()
+            empleado = cursor.execute(sqlQuery, (id,)).fetchone()
+
+            return empleado
+        except Error as e:
+            print(e)
+
+        return None    
 
 
     def create_Table(self, connexion, query):
