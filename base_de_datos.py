@@ -18,6 +18,7 @@ class VentaDB:
         self.queryTablaDetalle(self.connection)
         self.queryTablaProducto(self.connection)
         self.queryTablaEmpleado(self.connection)
+        self.queryTablaServicio(self.connection)
 
     #--------------------CREACION DE TABLAS---------------
     #--------------------TABLA VENTA----------------------
@@ -78,6 +79,15 @@ class VentaDB:
                                             """
         self.create_Table(conexión, self.empleado_query) 
 
+    #---------------------TABLA SERVICIO------------------------------------
+    def queryTablaServicio(self,conexión):
+        self.servicio_query = """CREATE TABLE IF NOT EXIST servicio (
+                                            idServicio INTEGER IDENTITY PRIMARY KEY NOT NULL,
+                                            NombreServicio TEXT     NOT NULL,
+                                            PrecioVenta NUMERIC    NOT NULL
+                                            );
+                                            """
+
     #-------------------INSERCION EN TABLAS -----------------------
     #-----------------------EMPLEADO-----------------------------
     
@@ -102,6 +112,25 @@ class VentaDB:
         except Error as e:
             print(e)
 
+    #------------------------SERVICIO--------------------------------
+        def add_servicio(self, servicio):
+        """
+        Realiza una inserción a la tabla de servicio.
+        """
+        sqlInsert = """
+                    INSERT INTO servicio(
+                        idServicio,NombreServicio,PrecioVenta
+                    )
+                    VALUES(?,?,?)    
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert,servicio)
+            self.connection.commit()
+        except Error as e:
+            print(e)
+
     #------------------ELIMINACION EN TABLAS-----------------
     #------------------TABLA EMPLEADOS----------------------
     def eliminar_empleado(self, id):
@@ -115,7 +144,28 @@ class VentaDB:
 
         try:
             cursor = self.connection.cursor()
-            cursor.execute(sqlQuery, (id,))
+            cursor.execute(sqlQuery, (id))
+            self.connection.commit()
+
+            return True
+        except Error as e:
+            print(e)
+
+        return None
+
+    #-------------------- SERVICIO ----------------------------------
+        def eliminar_servicio(self, id):
+        """
+        Elimina un empleado mediante el valor de la identidad.
+
+        param: id: El valor del registro de servicio.
+        :return: True si servico se eliminó. None en caso contrario.
+        """
+        sqlQuery = "DELETE FROM Servicio WHERE idServicio =  ? ; "
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery, (id))
             self.connection.commit()
 
             return True
@@ -140,6 +190,18 @@ class VentaDB:
 
         return None
 
+    #--------------------- SERVICIO -------------------------------
+        def obtenerServicio(self):
+        """ Obtiene todas las tuplas de la tabla servicio """
+        sqlQuery = " SELECT *FROM Servicio ORDER BY ROWID ASC "
+
+        try:
+            cursor = self.connection.cursor()
+            servicios = cursor.execute(sqlQuery).fetchall()
+
+            return servicios
+        except Error as e:
+            print(e)
 
     #------------------MODIFICACION DE TABLAS---------------
     #---------------------TABLA EMPLEADOS-------------------
@@ -163,7 +225,7 @@ class VentaDB:
             self.connection.commit()
         except Error as e:
             print(e)            
-
+     
 
     def obtenerEmpleadosPorId(self, id):
         """
@@ -183,7 +245,6 @@ class VentaDB:
             print(e)
 
         return None    
-
 
     def create_Table(self, connexion, query):
         """
