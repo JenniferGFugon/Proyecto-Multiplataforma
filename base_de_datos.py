@@ -316,7 +316,7 @@ class VentaDB:
             print(e)
 
     #------------------------ TIPO CLIENTE -----------------------------
-        def obtenerTipoCliente(self):
+    def obtenerTipoCliente(self):
         """ Obtiene todas las tuplas de la tabla servicio """
         sqlQuery = " SELECT *FROM TipoCliente ORDER BY ROWID ASC "
 
