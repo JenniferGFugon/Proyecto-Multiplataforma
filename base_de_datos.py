@@ -81,8 +81,8 @@ class VentaDB:
 
     #---------------------TABLA SERVICIO------------------------------------
     def queryTablaServicio(self,conexión):
-        self.servicio_query = """CREATE TABLE IF NOT EXIST servicio (
-                                            idServicio INTEGER IDENTITY PRIMARY KEY NOT NULL,
+        self.servicio_query = """CREATE TABLE IF NOT EXISTS servicio (
+                                            idServicio INTEGER  PRIMARY KEY AUTOINCREMENT,
                                             NombreServicio TEXT     NOT NULL,
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
