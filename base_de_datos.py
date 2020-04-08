@@ -80,10 +80,18 @@ class VentaDB:
                                   );
                                 """
         self.create_Table(conexión, self.producto_query)
-
     
-        
 
+    #---------------------Tabla Productos Varios------------------------------------
+    def queryTablaProductosVarios(self, conexión):
+        self.producto_query="""CREATE TABLE IF NOT EXISTS producto ( 
+                                    idProductoVario integer PRIMARY KEY AUTOINCREMENT,
+                                    NombreProducto   TEXT  NOT NULL,
+                                    marca   TEXT  NOT NULL,
+                                    existencia   integer  NOT NULL,
+                                    precioVenta  numeric  NOT NULL,
+                                    precioCompra  numeric NOT NULL);"""
+        self.create_Table(conexión, self.producto_query)
 
     #--------------------TABLA EMPLEADO-----------------------------
     def queryTablaEmpleado(self,conexión):
@@ -108,6 +116,9 @@ class VentaDB:
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
                                             """
+        self.create_Table(conexión, self.servicio_query) 
+
+    
     def queryTablaCliente(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST Cliente (
                                             idCliente INTEGER AUTOINCREMENT PRIMARY KEY,
@@ -121,12 +132,16 @@ class VentaDB:
                                             correoElectronico TEXT   NOT NULL,
                                             );
                                             """
+        self.create_Table(conexión, self.servicio_query) 
+
+
     def queryTablaTipoCliente(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST TipoCliente (
                                             idTipoCliente INTEGER AUTOINCREMENT PRIMARY KEY,
                                             TipoCliente TEXT     NOT NULL
                                             );
                                             """
+        self.create_Table(conexión, self.servicio_query) 
 
 
     #-------------------INSERCION EN TABLAS -----------------------
