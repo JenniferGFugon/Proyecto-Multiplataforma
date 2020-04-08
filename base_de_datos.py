@@ -82,11 +82,31 @@ class VentaDB:
     #---------------------TABLA SERVICIO------------------------------------
     def queryTablaServicio(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST servicio (
-                                            idServicio INTEGER IDENTITY PRIMARY KEY NOT NULL,
+                                            idServicio INTEGER AUTOINCREMENT PRIMARY KEY,
                                             NombreServicio TEXT     NOT NULL,
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
                                             """
+    def queryTablaCliente(self,conexión):
+        self.servicio_query = """CREATE TABLE IF NOT EXIST Cliente (
+                                            idCliente INTEGER AUTOINCREMENT PRIMARY KEY,
+                                            idTipoCiente TEXT        NOT NULL,
+                                            identidadCliente TEXT    NOT NULL,
+                                            nombreCliente TEXT       NOT NULL,
+                                            numeroTelefonico TEXT    NOT NULL,
+                                            numeroCelular TEXT       NOT NULL,
+                                            RTN TEXT                 NOT NULL,
+                                            direccionCliente TEXT    NOT NULL,
+                                            correoElectronico TEXT   NOT NULL,
+                                            );
+                                            """
+    def queryTablaTipoCliente(self,conexión):
+        self.servicio_query = """CREATE TABLE IF NOT EXIST TipoCliente (
+                                            idTipoCliente INTEGER AUTOINCREMENT PRIMARY KEY,
+                                            TipoCliente TEXT     NOT NULL
+                                            );
+                                            """
+
 
     #-------------------INSERCION EN TABLAS -----------------------
     #-----------------------EMPLEADO-----------------------------
@@ -113,7 +133,7 @@ class VentaDB:
             print(e)
 
     #------------------------SERVICIO--------------------------------
-        def add_servicio(self, servicio):
+    def add_servicio(self, servicio):
         """
         Realiza una inserción a la tabla de servicio.
         """
@@ -122,6 +142,45 @@ class VentaDB:
                         idServicio,NombreServicio,PrecioVenta
                     )
                     VALUES(?,?,?)    
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert,servicio)
+            self.connection.commit()
+        except Error as e:
+            print(e)
+
+    #----------------------- CLIENTE -----------------------------------
+    def add_cliente(self, cliente):
+        """
+        Realiza una inserción a la tabla de servicio.
+        """
+        sqlInsert = """
+                    INSERT INTO Cliente(
+                        idCliente,idTipoCliente,identidadCliente,nombreCliente,numeroTelefonico,
+                        numeroCelular, RTN, direccionCliente, correoElectronico
+                    )
+                    VALUES(?,?,?,?,?,?,?)    
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert,cliente)
+            self.connection.commit()
+        except Error as e:
+            print(e)
+
+    #------------------------ TIPO CLIENTE ----------------------------
+    def add_tipoCliente(self, TipoCliente):
+        """
+        Realiza una inserción a la tabla de servicio.
+        """
+        sqlInsert = """
+                    INSERT INTO TipoCliente(
+                        idTipoCliente,TipoCliente
+                    )
+                    VALUES(?,?)    
                     """
 
         try:
@@ -153,8 +212,8 @@ class VentaDB:
 
         return None
 
-    #-------------------- SERVICIO ----------------------------------
-        def eliminar_servicio(self, id):
+    #-------------------- TABLA SERVICIO ----------------------------------
+    def eliminar_servicio(self, id):
         """
         Elimina un empleado mediante el valor de la identidad.
 
@@ -173,7 +232,47 @@ class VentaDB:
             print(e)
 
         return None
+    #----------------------- CLIENTE --------------------------------------
+    def eliminar_cliente(self, id):
+        """
+        Elimina un cliente mediante el valor de la identidad.
 
+        param: id: El valor del registro del cliente.
+        :return: True si el empleado se eliminó. None en caso contrario.
+        """
+        sqlQuery = "DELETE FROM Cliente WHERE idCliente =  ? ; "
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery, (id))
+            self.connection.commit()
+
+            return True
+        except Error as e:
+            print(e)
+
+        return None
+
+    #----------------------- Tipo Cliente -----------------------------------
+    def eliminar_tipoCliente(self, id):
+        """
+        Elimina un tipoCliente mediante el valor de la identidad.
+
+        param: id: El valor del registro del tipo cliente.
+        :return: True si el empleado se eliminó. None en caso contrario.
+        """
+        sqlQuery = "DELETE FROM TipoCliente WHERE idTipoCliente =  ? ; "
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery, (id))
+            self.connection.commit()
+
+            return True
+        except Error as e:
+            print(e)
+
+        return None
     #---------------OBTENCION DE DATOS DE LAS TABLAS---------
     #------------------TABLA EMPLEADOS-----------------------
     def obtenerEmpleados(self):
@@ -191,7 +290,7 @@ class VentaDB:
         return None
 
     #--------------------- SERVICIO -------------------------------
-        def obtenerServicio(self):
+    def obtenerServicio(self):
         """ Obtiene todas las tuplas de la tabla servicio """
         sqlQuery = " SELECT *FROM Servicio ORDER BY ROWID ASC "
 
@@ -200,6 +299,32 @@ class VentaDB:
             servicios = cursor.execute(sqlQuery).fetchall()
 
             return servicios
+        except Error as e:
+            print(e)
+
+    #----------------------- CLIENTE----------------------------------
+    def obtenerCliente(self):
+        """ Obtiene todas las tuplas de la tabla Cliente """
+        sqlQuery = " SELECT *FROM Cliente ORDER BY ROWID ASC "
+
+        try:
+            cursor = self.connection.cursor()
+            clientes = cursor.execute(sqlQuery).fetchall()
+
+            return clientes
+        except Error as e:
+            print(e)
+
+    #------------------------ TIPO CLIENTE -----------------------------
+        def obtenerTipoCliente(self):
+        """ Obtiene todas las tuplas de la tabla servicio """
+        sqlQuery = " SELECT *FROM TipoCliente ORDER BY ROWID ASC "
+
+        try:
+            cursor = self.connection.cursor()
+            TipoClientes = cursor.execute(sqlQuery).fetchall()
+
+            return TipoClientes
         except Error as e:
             print(e)
 
