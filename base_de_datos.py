@@ -62,7 +62,36 @@ class VentaDB:
                                 """
         self.create_Table(conexión, self.producto_query)         
 
+    def queryTablaProductoCategoria(self, conexión):
+        self.producto_query="""CREATE TABLE IF NOT EXISTS producto ( 
+                                    idCategoriaProducto integer PRIMARY KEY AUTOINCREMENT,
+                                    idTipoProducto   integer  NOT NULL,
+                                    nombreCategoria  text NOT NULL);"""
+        self.create_Table(conexión, self.producto_query)
 
+    def queryTablaProductoRepuesto(self, conexión):
+        self.producto_query= """idRespuesto	integer PRIMARY KEY AUTOINCREMENT,
+                                marca	text not null,
+                                modelo	text not NULL,
+                                fabricante	text NOT NULL,
+                                exitencia	integer NOT NULL,
+                                costoCompra	numeric NOT NULL, 
+                                PrecioVenta	numeric NOT NULL
+                                  );
+                                """
+        self.create_Table(conexión, self.producto_query)
+    
+
+    #---------------------Tabla Productos Varios------------------------------------
+    def queryTablaProductosVarios(self, conexión):
+        self.producto_query="""CREATE TABLE IF NOT EXISTS producto ( 
+                                    idProductoVario integer PRIMARY KEY AUTOINCREMENT,
+                                    NombreProducto   TEXT  NOT NULL,
+                                    marca   TEXT  NOT NULL,
+                                    existencia   integer  NOT NULL,
+                                    precioVenta  numeric  NOT NULL,
+                                    precioCompra  numeric NOT NULL);"""
+        self.create_Table(conexión, self.producto_query)
 
     #--------------------TABLA EMPLEADO-----------------------------
     def queryTablaEmpleado(self,conexión):
@@ -78,7 +107,7 @@ class VentaDB:
                                             );
                                             """
         self.create_Table(conexión, self.empleado_query) 
-
+    
     #---------------------TABLA SERVICIO------------------------------------
     def queryTablaServicio(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST servicio (
@@ -87,6 +116,9 @@ class VentaDB:
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
                                             """
+        self.create_Table(conexión, self.servicio_query) 
+
+    
     def queryTablaCliente(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST Cliente (
                                             idCliente INTEGER AUTOINCREMENT PRIMARY KEY,
@@ -100,12 +132,16 @@ class VentaDB:
                                             correoElectronico TEXT   NOT NULL,
                                             );
                                             """
+        self.create_Table(conexión, self.servicio_query) 
+
+
     def queryTablaTipoCliente(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST TipoCliente (
                                             idTipoCliente INTEGER AUTOINCREMENT PRIMARY KEY,
                                             TipoCliente TEXT     NOT NULL
                                             );
                                             """
+        self.create_Table(conexión, self.servicio_query) 
 
 
     #-------------------INSERCION EN TABLAS -----------------------
@@ -185,7 +221,7 @@ class VentaDB:
 
         try:
             cursor = self.connection.cursor()
-            cursor.execute(sqlInsert,servicio)
+            cursor.execute(sqlInsert, TipoCliente)
             self.connection.commit()
         except Error as e:
             print(e)
@@ -317,13 +353,16 @@ class VentaDB:
 
     #------------------------ TIPO CLIENTE -----------------------------
     def obtenerTipoCliente(self):
+<<<<<<< HEAD
         """ Obtiene todas las tuplas de la tabla servicio """
+=======
+        """Obtiene todas las tuplas de la tabla servicio """
+>>>>>>> 93fa7c6951d2d799cd503871145a3f31ae1c1c6d
         sqlQuery = " SELECT *FROM TipoCliente ORDER BY ROWID ASC "
-
+        
         try:
             cursor = self.connection.cursor()
             TipoClientes = cursor.execute(sqlQuery).fetchall()
-
             return TipoClientes
         except Error as e:
             print(e)
