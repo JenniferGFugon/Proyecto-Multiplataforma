@@ -61,22 +61,25 @@ class VentaDB:
                                   );
                                 """
         self.create_Table(conexión, self.producto_query)         
-
+    
+    #-----------------------Tabla Categoria Producto -----------------------------------------------
     def queryTablaProductoCategoria(self, conexión):
-        self.producto_query="""CREATE TABLE IF NOT EXISTS producto ( 
+        self.producto_query="""CREATE TABLE IF NOT EXISTS categoriaProducto ( 
                                     idCategoriaProducto integer PRIMARY KEY AUTOINCREMENT,
                                     idTipoProducto   integer  NOT NULL,
                                     nombreCategoria  text NOT NULL);"""
         self.create_Table(conexión, self.producto_query)
 
+    #-----------------------TABLA REPUESTO-----------------------------------------    
     def queryTablaProductoRepuesto(self, conexión):
-        self.producto_query= """idRespuesto	integer PRIMARY KEY AUTOINCREMENT,
-                                marca	text not null,
-                                modelo	text not NULL,
-                                fabricante	text NOT NULL,
-                                exitencia	integer NOT NULL,
-                                costoCompra	numeric NOT NULL, 
-                                PrecioVenta	numeric NOT NULL
+        self.producto_query= """CREATE TABLE IF NO EXISTS Repuesto(
+                                    idRespuesto	integer PRIMARY KEY AUTOINCREMENT,
+                                    marca	text not null,
+                                    modelo	text not NULL,
+                                    fabricante	text NOT NULL,
+                                    exitencia	integer NOT NULL,
+                                    costoCompra	numeric NOT NULL, 
+                                    PrecioVenta	numeric NOT NULL
                                   );
                                 """
         self.create_Table(conexión, self.producto_query)
@@ -110,20 +113,18 @@ class VentaDB:
     
     #---------------------TABLA SERVICIO------------------------------------
     def queryTablaServicio(self,conexión):
-<<<<<<< HEAD
+        
         self.servicio_query = """CREATE TABLE IF NOT EXISTS servicio (
                                             idServicio INTEGER  PRIMARY KEY AUTOINCREMENT,
-=======
-        self.servicio_query = """CREATE TABLE IF NOT EXIST servicio (
                                             idServicio INTEGER AUTOINCREMENT PRIMARY KEY,
->>>>>>> refs/remotes/origin/Develop
                                             NombreServicio TEXT     NOT NULL,
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
                                             """
+
         self.create_Table(conexión, self.servicio_query) 
 
-    
+    #-----------------------------Tabla cliente---------------------------------------------
     def queryTablaCliente(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST Cliente (
                                             idCliente INTEGER AUTOINCREMENT PRIMARY KEY,
@@ -137,9 +138,10 @@ class VentaDB:
                                             correoElectronico TEXT   NOT NULL,
                                             );
                                             """
+
         self.create_Table(conexión, self.servicio_query) 
 
-
+    #--------------------------------Tabla TipoCliente--------------------------------------
     def queryTablaTipoCliente(self,conexión):
         self.servicio_query = """CREATE TABLE IF NOT EXIST TipoCliente (
                                             idTipoCliente INTEGER AUTOINCREMENT PRIMARY KEY,
@@ -358,11 +360,9 @@ class VentaDB:
 
     #------------------------ TIPO CLIENTE -----------------------------
     def obtenerTipoCliente(self):
-<<<<<<< HEAD
+
         """ Obtiene todas las tuplas de la tabla servicio """
-=======
         """Obtiene todas las tuplas de la tabla servicio """
->>>>>>> 93fa7c6951d2d799cd503871145a3f31ae1c1c6d
         sqlQuery = " SELECT *FROM TipoCliente ORDER BY ROWID ASC "
         
         try:
