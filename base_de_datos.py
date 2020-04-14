@@ -233,6 +233,65 @@ class VentaDB:
         except Error as e:
             print(e)
 
+    #------------------TABLA PRODUCTO----------------------
+    def add_tablaproducto(self, TablaProducto):
+        """ Realiza una inserción a la tabla de producto. """
+        sqlInsert = """
+                    INSERT INTO Producto(
+                        idProducto,idCategoriaProduct,
+                        NombreProducto,PrecioCompra,
+                        PrecioVenta,Cantidad
+                    )
+                    VALUES(?,?,?,?,?,?)    
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert, TablaProducto)
+            self.connection.commit()
+        except Error as e:
+            print(e)
+
+
+    #------------------TABLA Repuesto----------------------
+    def add_repuesto(self, Repuesto):
+        """ Realiza una inserción a la tabla de repuesto. """
+        sqlInsert = """
+                    INSERT INTO Repuesto(
+                        idProductoVario,marca,modelo,
+                        fabricante,exitencia,
+                        costoCompra,PrecioVenta
+                    )
+                    VALUES(?,?,?,?,?,?,?)    
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert, Repuesto)
+            self.connection.commit()
+        except Error as e:
+            print(e)
+
+
+    #------------------TABLA Productos Varios----------------------
+    def add_productosvarios(self, productosVarios):
+        """ Realiza una inserción a la tabla de Productos Varios. """
+        sqlInsert = """
+                    INSERT INTO productosVarios(
+                        idProductoVario,NombreProducto,
+                        marca,exitencia,precioCompra,
+                        precioVenta
+                    )
+                    VALUES(?,?,?,?,?,?)    
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert, productosVarios)
+            self.connection.commit()
+        except Error as e:
+            print(e)
+
     #------------------ELIMINACION EN TABLAS-----------------
     #------------------TABLA EMPLEADOS----------------------
     def eliminar_empleado(self, id):
