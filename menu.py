@@ -612,7 +612,7 @@ class AgregarCliente(QWidget):
     def insertarCliente(self):
         """ Insertar los valores del formulario a la tabla de cliente """
         # Verificar si los valores requeridos fueron agregados
-        if (self.input_nombre_cliente.text() or self.input_id_cliente.text() or
+        if (self.input_id_cliente.text() or self.input_nombre_cliente.text() or
                 self.input_telefono_cliente.text() or self.input_celular_cliente.text() or
                 self.input_rtn_cliente.text() or self.input_direccion_cliente.text() or
                 self.input_correo_cliente.text() != ""):
