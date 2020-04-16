@@ -476,6 +476,7 @@ class VentanaCliente(QWidget):
         self.close()    
 
 
+
     #-----------PANTALLA EMPLEADOS-------------------
         
 #------Agregar Cliente---------------
@@ -544,9 +545,9 @@ class AgregarCliente(QWidget):
         lbl_nombre_cliente = QLabel("Nombre del cliente: ", self)
         lbl_nombre_cliente.setFont(fuente)
         lbl_nombre_cliente.move(60, 180)
-        input_nombre_cliente = QLineEdit(self)
-        input_nombre_cliente.move(250, 180)
-        input_nombre_cliente.setFixedWidth(400)
+        input_nombre = QLineEdit(self)
+        input_nombre.move(250, 180)
+        input_nombre.setFixedWidth(400)
         lbl_telefono_cliente = QLabel("Telefono: ", self)
         lbl_telefono_cliente.setFont(fuente)
         lbl_telefono_cliente.move(60, 220)
@@ -609,14 +610,15 @@ class AgregarCliente(QWidget):
         self.cliente = VentanaCliente()
         self.close()
 
+
     def insertarCliente(self):
         """ Insertar los valores del formulario a la tabla de cliente """
         # Verificar si los valores requeridos fueron agregados
-        if (self.input_nombre_cliente.text() or self.input_id_cliente.text() or
+        if(self.input_nombre.text() or self.input_id_cliente.text() or
                 self.input_telefono_cliente.text() or self.input_celular_cliente.text() or
                 self.input_rtn_cliente.text() or self.input_direccion_cliente.text() or
                 self.input_correo_cliente.text() != ""):
-            cliente = (str(self.input_id_cliente.text()), str(self.input_nombre_cliente.text()),
+            cliente = (str(self.input_id_cliente.text()), str(self.input_nombre.text()),
                         str(self.input_telefono_cliente.text()) , str(self.input_celular_cliente.text()),
                         str(self.input_direccion_cliente.text()) ,  str(self.input_correo_cliente.text()),
                         str(self.input_rtn_cliente.text()))
@@ -627,13 +629,19 @@ class AgregarCliente(QWidget):
                     self, "Guardar", "Cliente agregado correctamente")
                 self.close()
                 
-                self.llamar_cliente()
+                #self.llamar_cliente()
             except Error as e:
                 QMessageBox.information(
                     self, "Error", "Error al momento de agregar el cliente")
         else:
             QMessageBox.information(
                 self, "Advertencia", "Debes ingresar toda la información")    
+
+
+
+
+
+
 
 class ModificarCliente(QWidget):
     """ Ventana para agregar nuevos clientes """
@@ -755,6 +763,9 @@ class ModificarCliente(QWidget):
         btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
         btn_menu.setFont(fuente) 
+
+
+
 
 class empleados(QWidget):
     def __init__(self):
@@ -894,7 +905,7 @@ class empleados(QWidget):
             yes = QMessageBox.Yes
 
             if empleado:
-                question_text = f"¿Está seguro de eliminar el empleado {empleado[0]}?"
+                question_text = "¿Está seguro de eliminar el empleado ?"
                 question = QMessageBox.question(self, "Advertencia", question_text,
                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
@@ -909,6 +920,9 @@ class empleados(QWidget):
 
         else:
             QMessageBox.information(self, "Advertencia", "Favor seleccionar un empleado a eliminar")                
+
+    def ModificarEmpleado(self):
+        self.pantallaModificar = ModificarEmpleado()
 
 
     def cargarDatosAModificar(self):

@@ -1,1 +1,1 @@
-self.llenar_lista_empleado()
+self.main_layout.addLayout(self.left_layout, 70)
