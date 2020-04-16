@@ -53,7 +53,7 @@ class VentaDB:
     def queryTablaProducto(self,conexión):
         self.producto_query ="""CREATE TABLE IF NOT EXISTS producto ( 
                                     idProducto  integer PRIMARY KEY AUTOINCREMENT,
-                                    idCategoriaProducto  integer  NOT NULL,
+                                    CategoriaProducto  text  NOT NULL,
                                     nombreProducto  text NOT NULL,
                                     precioCompra numeric NOT NULL ,
                                     precioVenta numeric NOT NULL,
@@ -62,40 +62,6 @@ class VentaDB:
                                 """
         self.create_Table(conexión, self.producto_query)         
     
-    #-----------------------Tabla Categoria Producto -----------------------------------------------
-    def queryTablaProductoCategoria(self, conexión):
-        self.producto_query="""CREATE TABLE IF NOT EXISTS categoriaProducto ( 
-                                    idCategoriaProducto integer PRIMARY KEY AUTOINCREMENT,
-                                    idTipoProducto   integer  NOT NULL,
-                                    nombreCategoria  text NOT NULL);"""
-        self.create_Table(conexión, self.producto_query)
-
-    #-----------------------TABLA REPUESTO-----------------------------------------    
-    def queryTablaProductoRepuesto(self, conexión):
-        self.producto_query= """CREATE TABLE IF NO EXISTS Repuesto(
-                                    idRespuesto	integer PRIMARY KEY AUTOINCREMENT,
-                                    marca	text not null,
-                                    modelo	text not NULL,
-                                    fabricante	text NOT NULL,
-                                    exitencia	integer NOT NULL,
-                                    costoCompra	numeric NOT NULL, 
-                                    PrecioVenta	numeric NOT NULL
-                                  );
-                                """
-        self.create_Table(conexión, self.producto_query)
-    
-
-    #---------------------Tabla Productos Varios------------------------------------
-    def queryTablaProductosVarios(self, conexión):
-        self.producto_query="""CREATE TABLE IF NOT EXISTS producto ( 
-                                    idProductoVario integer PRIMARY KEY AUTOINCREMENT,
-                                    NombreProducto   TEXT  NOT NULL,
-                                    marca   TEXT  NOT NULL,
-                                    existencia   integer  NOT NULL,
-                                    precioVenta  numeric  NOT NULL,
-                                    precioCompra  numeric NOT NULL);"""
-        self.create_Table(conexión, self.producto_query)
-
     #--------------------TABLA EMPLEADO-----------------------------
     def queryTablaEmpleado(self,conexión):
         self.empleado_query = """  CREATE TABLE IF NOT EXISTS empleado (
@@ -234,11 +200,11 @@ class VentaDB:
             print(e)
 
     #------------------TABLA PRODUCTO----------------------
-    def add_tablaproducto(self, TablaProducto):
+    def add_producto(self, TablaProducto):
         """ Realiza una inserción a la tabla de producto. """
         sqlInsert = """
                     INSERT INTO Producto(
-                        idProducto,idCategoriaProduct,
+                        idProducto,CategoriaProducto,
                         NombreProducto,PrecioCompra,
                         PrecioVenta,Cantidad
                     )
@@ -252,45 +218,6 @@ class VentaDB:
         except Error as e:
             print(e)
 
-
-    #------------------TABLA Repuesto----------------------
-    def add_repuesto(self, Repuesto):
-        """ Realiza una inserción a la tabla de repuesto. """
-        sqlInsert = """
-                    INSERT INTO Repuesto(
-                        idProductoVario,marca,modelo,
-                        fabricante,exitencia,
-                        costoCompra,PrecioVenta
-                    )
-                    VALUES(?,?,?,?,?,?,?)    
-                    """
-
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(sqlInsert, Repuesto)
-            self.connection.commit()
-        except Error as e:
-            print(e)
-
-
-    #------------------TABLA Productos Varios----------------------
-    def add_productosvarios(self, productosVarios):
-        """ Realiza una inserción a la tabla de Productos Varios. """
-        sqlInsert = """
-                    INSERT INTO productosVarios(
-                        idProductoVario,NombreProducto,
-                        marca,exitencia,precioCompra,
-                        precioVenta
-                    )
-                    VALUES(?,?,?,?,?,?)    
-                    """
-
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(sqlInsert, productosVarios)
-            self.connection.commit()
-        except Error as e:
-            print(e)
 
     #------------------ELIMINACION EN TABLAS-----------------
     #------------------TABLA EMPLEADOS----------------------
