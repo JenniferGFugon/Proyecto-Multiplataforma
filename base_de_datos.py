@@ -357,6 +357,21 @@ class VentaDB:
         except Error as e:
             print(e)
 
+    #---------------------Obtener Producto-------------------
+    def obtenerProducto(self):
+        """ Obtiene todas las tuplas de la tabla Producto """
+        sqlQuery = " SELECT *FROM producto ORDER BY ROWID ASC "
+
+        try:
+            cursor = self.connection.cursor()
+            producto = cursor.execute(sqlQuery).fetchall()
+
+            return producto
+        except Error as e:
+            print(e)
+
+        return None
+
     #------------------MODIFICACION DE TABLAS---------------
     #---------------------TABLA EMPLEADOS-------------------
     def modificarEmpleadoPorId(self,empleado):
