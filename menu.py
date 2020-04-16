@@ -192,6 +192,7 @@ class VentanaInventario(QWidget):
         self.btn_modificar_inventario = QPushButton("Modificar Producto")
         self.btn_modificar_inventario.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
+        self.btn_modificar_inventario.clicked.connect(self.cargarDatosAModificarProducto)                                 
         self.btn_modificar_inventario.setFixedWidth(165)
         self.btn_modificar_inventario.setFixedHeight(40)
 
@@ -246,6 +247,18 @@ class VentanaInventario(QWidget):
                     .format(producto[0], producto[1], producto[2], producto[3],
                      producto[4], producto[5]))
 
+    def modificarProducto(self):
+        self.modificaproducto = EditarProducto()
+
+    def cargarDatosAModificarProducto(self):
+        '''Carga los datos que seran modificados por el usuario'''
+        global id
+        if self.lista_inventario.selectedItems():
+            producto = self.lista_inventario.currentItem().text()
+            id =  producto.split(" -- ")[0]
+            self.modificarProducto()
+        else:
+            QMessageBox.information(self,"Informacion","No selecciono ningun producto")  
 
     def Llamar_agregar(self):
         self.llamar_agregar = AgregarProducto()
@@ -375,9 +388,9 @@ class AgregarProducto(QWidget):
         if (self.input_nombre_producto.text() or self.input_categoria_producto.text() 
             or self.input_existencia_producto.text() or self.input_precio_compra.text() or
             self.input_precio_venta.text() != ""):
-            inventario = (str(self.input_nombre_producto.text()), str(self.input_categoria_producto.text()),
-                        str(self.input_existencia_producto.text()) , str(self.input_precio_compra.text()),
-                        str(self.input_precio_venta.text()) )
+            inventario = (str(self.input_categoria_producto.text()), str(self.input_nombre_producto.text()), 
+                         str(self.input_precio_compra.text()), str(self.input_precio_venta.text()),
+                         str(self.input_existencia_producto.text()) )
             try:
                 self.basedatos.add_producto(inventario)
                 QMessageBox.information(
@@ -394,8 +407,164 @@ class AgregarProducto(QWidget):
     def Llamar_inventario(self):
         self.ventaInve = VentanaInventario()
         self.close()        
-
 #------------------------------------------------------------------------------------------------------------
+#----------------------------Pantalla Modificar Empleado----------------------------------------------------
+class EditarProducto(QWidget):
+    """ Ventana para Editar productos """
+
+    def __init__(self):
+        super().__init__()
+        self.basedatos = VentaDB("base_UMA.db")
+        paleta = QPalette()
+        paleta.setColor(QPalette.Background, QColor(229, 25, 25))
+        self.setPalette(paleta)
+        self.setWindowTitle("Editar Producto")
+        self.setGeometry(430, 120, 750, 550)
+        self.UI()
+        self.show()
+
+    def UI(self):
+        """ Componentes del diseño de la edicion """
+        self.encabezado()
+        self.widgets()
+        self.botones() 
+        self.cargarDatosProducto()
+
+    def encabezado(self):
+        """ Encabezado de la edicion """
+        paleta = QPalette()
+        paleta.setColor(QPalette.Background, QColor(0, 0, 0))
+
+        frame = QFrame(self)
+        frame.setFrameShape(QFrame.NoFrame)
+        frame.setFrameShadow(QFrame.Sunken)
+        frame.setAutoFillBackground(True)
+        frame.setPalette(paleta)
+        frame.setFixedWidth(2000)
+        frame.setFixedHeight(84)
+        frame.move(0, 0)
+
+        logo = QLabel(frame)
+        logo.setFixedWidth(90)
+        logo.setFixedHeight(50)
+        logo.setPixmap(QPixmap("Logo.png").scaled(90, 90, Qt.KeepAspectRatio,
+                                                         Qt.SmoothTransformation))
+        logo.move(20, 12)
+
+        fuenteTitulo = QFont()
+        fuenteTitulo.setPointSize(19)
+        fuenteTitulo.setBold(True) 
+
+        self.lbl_Titulo = QLabel("<font color='white'>Editar Producto</font>", frame)
+        self.lbl_Titulo.setFont(fuenteTitulo)
+        self.lbl_Titulo.move(270, 25)
+
+    def widgets(self):
+        """ Widgets que conforman la ventana de Editar Producto """
+        self.fuente = QFont()
+        self.fuente.setPointSize(10)
+        self.fuente.setFamily("Bahnschrift Light")
+        self.fuente.setBold(True)
+        
+        self.lbl_nombre_producto = QLabel("Nombre del Producto: ", self)
+        self.lbl_nombre_producto.setFont(fuente)
+        self.lbl_nombre_producto.move(60, 140)
+        self.input_nombre_producto = QLineEdit(self)
+        self.input_nombre_producto.move(225, 140)
+        self.input_nombre_producto.setFixedWidth(400)
+        self.lbl_categoria_producto = QLabel("Categoria: ", self)
+        self.lbl_categoria_producto.setFont(fuente)
+        self.lbl_categoria_producto.move(60, 180)
+        self.input_categoria_producto = QLineEdit(self)
+        self.input_categoria_producto.move(225, 180)
+        self.input_categoria_producto.setFixedWidth(400)
+        self.lbl_existencia_producto = QLabel("Existencia: ", self)
+        self.lbl_existencia_producto.setFont(fuente)
+        self.lbl_existencia_producto.move(60, 220)
+        self.input_existencia_producto = QLineEdit(self)
+        self.input_existencia_producto.move(225, 220)
+        self.input_existencia_producto.setFixedWidth(400)  
+        self.lbl_precio_compra = QLabel("Precio de Compra: ", self)
+        self.lbl_precio_compra.setFont(fuente)
+        self.lbl_precio_compra.move(60, 260)
+        self.input_precio_compra = QLineEdit(self)
+        self.input_precio_compra.move(225, 260)
+        self.input_precio_compra.setFixedWidth(400)
+        self.lbl_precio_venta = QLabel("Precio de venta: ", self)
+        self.lbl_precio_venta.setFont(fuente)
+        self.lbl_precio_venta.move(60, 300)
+        self.input_precio_venta = QLineEdit(self)
+        self.input_precio_venta.move(225, 300)
+        self.input_precio_venta.setFixedWidth(400)  
+
+    def botones(self):
+        """ Botones que conforman la edicion del producto """
+        self.fuente = QFont()
+        self.fuente.setPointSize(10)
+        self.fuente.setFamily("Bahnschrift Light")
+        self.fuente.setBold(True)
+
+        self.btn_editar_producto = QPushButton("Modificar", self)
+        self.btn_editar_producto.setFixedWidth(135)
+        self.btn_editar_producto.setFixedHeight(28)
+        self.btn_editar_producto.move(215, 400)
+        self.btn_editar_producto.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                       "color: \'white\';")
+        self.btn_editar_producto.setFont(fuente)
+        self.btn_editar_producto.clicked.connect(self.modificarProducto)
+        self.btn_menu = QPushButton("Menu Principal", self)
+        self.btn_menu.setFixedWidth(135)
+        self.btn_menu.setFixedHeight(28)
+        self.btn_menu.move(415, 400)
+        self.btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                        "color: \'white\';")
+        self.btn_menu.setFont(fuente)
+        self.btn_menu.clicked.connect(self.pantallaPrincipal)
+
+
+    def  cargarDatosProducto(self):
+        '''Carga los datos seleccionados en la lista para luego ser 
+        modificados por el usuario''' 
+        products = self.basedatos.obtenerProductoPorId(id)
+        if products:
+            for product in products:
+                    
+                self.input_nombre_producto.setText(products[2]) 
+                self.input_categoria_producto.setText(products[1]) 
+                self.input_existencia_producto.setText(str(products[5])) 
+                self.input_precio_compra.setText(str(products[3])) 
+                self.input_precio_venta.setText(str(products[4])) 
+
+    def modificarProducto(self):
+        """ Modifica los valores del formulario a la tabla de productos """
+
+
+        if (self.input_nombre_producto.text () or self.input_categoria_producto.text() or
+                self.input_existencia_producto.text() or self.input_precio_compra.text() or
+                self.input_precio_venta.text() != ""):
+                producto = (str(self.input_categoria_producto.text()), str(self.input_nombre_producto.text()), 
+                         str(self.input_precio_compra.text()), str(self.input_precio_venta.text()),
+                         str(self.input_existencia_producto.text()), id)
+
+                try: 
+                    self.basedatos.modificarProductoPorId(producto)
+                    QMessageBox.information(self,"Guardar","Datos modificados correctamente ")
+                    
+                    
+                    self.close()
+                    self.pantallaPrincipal()
+                except Error as e:
+                    QMessageBox.information(
+                        self, "Error", "Error al momento de modificar datos")
+        else:
+            QMessageBox.information(
+                self, "Advertencia", "Debes ingresar toda la información")    
+
+    def pantallaPrincipal(self):
+        self.pantala = VentanaInventario()
+        self.close() 
+
+#----------------------------------------------------------------------------------------------------------
 class AgregarCliente(QWidget):
     """ Ventana para agregar nuevos clientes """
 
