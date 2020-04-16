@@ -203,12 +203,11 @@ class VentaDB:
     def add_producto(self, TablaProducto):
         """ Realiza una inserción a la tabla de producto. """
         sqlInsert = """
-                    INSERT INTO Producto(
-                        idProducto,CategoriaProducto,
+                    INSERT INTO Producto(CategoriaProducto,
                         NombreProducto,PrecioCompra,
                         PrecioVenta,Cantidad
                     )
-                    VALUES(?,?,?,?,?,?)    
+                    VALUES(?,?,?,?,?)    
                     """
 
         try:
