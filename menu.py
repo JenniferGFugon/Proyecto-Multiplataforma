@@ -364,7 +364,6 @@ class AgregarProducto(QWidget):
             inventario = (str(self.input_nombre_producto.text()), str(self.input_categoria_producto.text()),
                         str(self.input_existencia_producto.text()) , str(self.input_precio_compra.text()),
                         str(self.input_precio_venta.text()) )
-
             try:
                 self.basedatos.add_producto(inventario)
                 QMessageBox.information(
