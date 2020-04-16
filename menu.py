@@ -353,6 +353,7 @@ class AgregarProducto(QWidget):
         self.btn_menu.move(415, 400)
         self.btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
+        self.btn_menu.clicked.connect(self.Llamar_inventario)     
         self.btn_menu.setFont(fuente)
     
     def insertar_inventario(self):
@@ -370,14 +371,16 @@ class AgregarProducto(QWidget):
                     self, "Guardar", "Producto agregado correctamente")
                 self.close()
                 
-                self.Llamar_agregar()
+                self.Llamar_inventario()
             except Error as e:
                 QMessageBox.information(
                     self, "Error", "Error al momento de agregar el producto")
         else:
             QMessageBox.information(
                 self, "Advertencia", "Debes ingresar toda la información")    
-
+    def Llamar_inventario(self):
+        self.ventaInve = VentanaInventario()
+        self.close()        
 
 #------------------------------------------------------------------------------------------------------------
 class AgregarCliente(QWidget):
