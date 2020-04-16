@@ -249,6 +249,7 @@ class VentanaInventario(QWidget):
 
     def modificarProducto(self):
         self.modificaproducto = EditarProducto()
+        self.close()
 
     def cargarDatosAModificarProducto(self):
         '''Carga los datos que seran modificados por el usuario'''
