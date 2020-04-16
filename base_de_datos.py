@@ -219,6 +219,29 @@ class VentaDB:
 
 
     #------------------ELIMINACION EN TABLAS-----------------
+    #------------------TABLA Producto----------------------
+    def eliminar_Producto(self, id):
+        """
+        Elimina un producto mediante el valor de la idProducto.
+
+        param: id: El valor del registro del producto.
+        :return: True si el producto se eliminó. None en caso contrario.
+        """
+        sqlQuery = "DELETE FROM producto WHERE idProducto =  ? ; "
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery, (id))
+            self.connection.commit()
+
+            return True
+        except Error as e:
+            print(e)
+
+        return None
+
+
+
     #------------------TABLA EMPLEADOS----------------------
     def eliminar_empleado(self, id):
         """
@@ -373,6 +396,28 @@ class VentaDB:
         return None
 
     #------------------MODIFICACION DE TABLAS---------------
+    #---------------------TABLA Producto-------------------
+    def modificarProductoPorId(self,producto):
+        '''Modifica datos del empleado
+        Parametros : id  del prodcuto del cual se modificaran 
+        los datos'''
+        sqlQuery = """update empleado
+                        SET CategoriaProducto =?,
+                        nombreProducto =?,
+                        precioCompra =?,
+                        precioVenta =?,
+                        cantidad =?,
+                        WHERE idProducto = ?;"""
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery,producto)
+            self.connection.commit()
+        except Error as e:
+            print(e)    
+
+
+
     #---------------------TABLA EMPLEADOS-------------------
     def modificarEmpleadoPorId(self,empleado):
         '''Modifica datos del empleado
