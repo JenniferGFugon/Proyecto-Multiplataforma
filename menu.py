@@ -229,7 +229,10 @@ class VentanaInventario(QWidget):
     def llamar_menu(self):
         self.call = Menu()
         self.close()    
-        
+    #------------------------------Pantalla Agregar Inventario---------------------------------
+    
+
+    #------------------------------------------------------------------------------------------
 
     #-------------PANTALLA VENTA--------------
 class VentanaVentas(QWidget):
@@ -302,7 +305,6 @@ class VentanaVentas(QWidget):
         self.btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
         self.btn_menu.clicked.connect(self.llamar_menu)                                 
-        
         self.btn_menu.setFixedWidth(165)
         self.btn_menu.setFixedHeight(40)
 
@@ -909,6 +911,9 @@ class empleados(QWidget):
 
         else:
             QMessageBox.information(self, "Advertencia", "Favor seleccionar un empleado a eliminar")                
+    
+    def ModificarEmpleado(self):
+        self.pantallaModificar = ModificarEmpleado()
 
 
     def cargarDatosAModificar(self):
