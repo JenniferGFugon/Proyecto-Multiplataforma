@@ -127,6 +127,7 @@ class VentanaInventario(QWidget):
     """ Ventana de listado de inventario del sistema """
     def __init__(self):
         super().__init__()
+        self.basedatos = VentaDB("base_UMA.db")
         paleta = QPalette()
         paleta.setColor(QPalette.Background, QColor(229, 25, 25))
         #self.setQPalette(paleta)
@@ -142,6 +143,7 @@ class VentanaInventario(QWidget):
         self.encabezadoInventario()
         self.botonesInventario()
         self.layoutsInventario()
+        self.llenar_lista_Producto()
         self.show()
        
 
@@ -232,6 +234,17 @@ class VentanaInventario(QWidget):
         self.right_main_layout.addWidget(self.btn_menu)
         self.top_layout.addWidget(self.encabezadoInventario())
         self.setLayout(self.main_layout)
+    
+    def llenar_lista_Producto(self):
+        """ Obtiene las tuplas de productos y las muestra en la lista """
+        productos = self.basedatos.obtenerProducto()
+
+        if productos:
+            for producto in productos:
+                self.lista_inventario.addItem(
+                    "{0} -- {1} -- {2} -- {3} -- {4} -- {5}"
+                    .format(producto[0], producto[1], producto[2], producto[3],
+                     producto[4], producto[5]))
 
 
     def Llamar_agregar(self):
