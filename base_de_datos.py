@@ -82,7 +82,6 @@ class VentaDB:
         
         self.servicio_query = """CREATE TABLE IF NOT EXISTS servicio (
                                             idServicio INTEGER  PRIMARY KEY AUTOINCREMENT,
-                                            idServicio INTEGER AUTOINCREMENT PRIMARY KEY,
                                             NombreServicio TEXT     NOT NULL,
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
@@ -397,16 +396,16 @@ class VentaDB:
 
     #------------------MODIFICACION DE TABLAS---------------
     #---------------------TABLA Producto-------------------
-    def modificarProductoPorId(self,producto):
+    def modificarProductoPorId(self, producto):
         '''Modifica datos del empleado
         Parametros : id  del prodcuto del cual se modificaran 
         los datos'''
-        sqlQuery = """update empleado
+        sqlQuery = """update producto
                         SET CategoriaProducto =?,
                         nombreProducto =?,
                         precioCompra =?,
                         precioVenta =?,
-                        cantidad =?,
+                        cantidad =?
                         WHERE idProducto = ?;"""
 
         try:
@@ -438,8 +437,26 @@ class VentaDB:
             cursor.execute(sqlQuery,empleado)
             self.connection.commit()
         except Error as e:
-            print(e)            
-     
+            print(e)    
+
+    def obtenerProductoPorId(self, id):
+        """
+        Busca un producto mediante el valor de id.
+
+        param: id: El valor del id del producto.
+        :return: Un arreglo con los atributos del producto.
+        """
+        sqlQuery = " SELECT *FROM producto WHERE idProducto = ? ;"
+
+        try:
+            cursor = self.connection.cursor()
+            producto = cursor.execute(sqlQuery, (id,)).fetchone()
+
+            return producto
+        except Error as e:
+            print(e)
+
+        return None     
 
     def obtenerEmpleadosPorId(self, id):
         """
