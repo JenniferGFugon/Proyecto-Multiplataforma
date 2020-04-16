@@ -1,1 +1,1 @@
-self.main_layout.addLayout(self.left_layout, 70)
+.currentItem().text()
