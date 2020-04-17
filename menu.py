@@ -1361,7 +1361,8 @@ class AgregarCliente(QWidget):
         self.btn_menu.move(415, 510)
         self.btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
-        self.btn_menu.setFont(fuente)     
+        self.btn_menu.setFont(fuente)
+        self.btn_menu.clicked.connect(self.llamar_cliente)     
 
 
     def llamar_cliente(self):
