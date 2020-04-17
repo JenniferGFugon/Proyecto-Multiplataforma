@@ -1,1 +1,1 @@
-self.llenar_lista_empleado()
+  window = Menu()
