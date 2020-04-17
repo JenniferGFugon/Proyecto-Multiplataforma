@@ -394,6 +394,21 @@ class VentaDB:
 
         return None
 
+
+    def optenerTodoProducto(self):
+        """ Obtiene todos los productos de la tabla prodcuto"""
+        sqlQuery = " SELECT nombreProducto FROM producto "
+
+        try:
+            cursor = self.connection.cursor()
+            empleados = cursor.execute(sqlQuery).fetchall()
+
+            return empleados
+        except Error as e:
+            print(e)
+
+        return None
+
     #------------------MODIFICACION DE TABLAS---------------
     #---------------------TABLA Producto-------------------
     def modificarProductoPorId(self, producto):
