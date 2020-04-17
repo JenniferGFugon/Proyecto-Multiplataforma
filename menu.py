@@ -236,6 +236,7 @@ class VentanaInventario(QWidget):
         self.top_layout.addWidget(self.encabezadoInventario())
         self.setLayout(self.main_layout)
     
+
     def llenar_lista_Producto(self):
         """ Obtiene las tuplas de productos y las muestra en la lista """
         productos = self.basedatos.obtenerProducto()
@@ -247,9 +248,11 @@ class VentanaInventario(QWidget):
                     .format(producto[0], producto[1], producto[2], producto[3],
                      producto[4], producto[5]))
 
+
     def modificarProducto(self):
         self.modificaproducto = EditarProducto()
         self.close()
+
 
     def cargarDatosAModificarProducto(self):
         '''Carga los datos que seran modificados por el usuario'''
@@ -261,15 +264,45 @@ class VentanaInventario(QWidget):
         else:
             QMessageBox.information(self,"Informacion","No selecciono ningun producto")  
 
+
+    def eliminar_inventario(self):
+        """ Eliminar el producto segun el id del producto """
+        if self.lista_inventario.selectedItems():
+            inventario = self.lista_inventario.currentItem().text()
+            id = inventario.split(" -- ")[0]
+
+            inventario = self.basedatos.obtenerProductoPorId(id)
+
+            yes = QMessageBox.Yes
+
+            if inventario:
+                question_text = f"¿Está seguro de eliminar el producto {inventario[0]}?"
+                question = QMessageBox.question(self, "Advertencia", question_text,
+                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+                if question == QMessageBox.Yes:
+                    self.basedatos.eliminar_Producto(inventario[0])
+                    QMessageBox.information(self, "Información", "¡producto eliminado satisfactoriamente!")
+                    self.lista_inventario.clear()
+                    self.llenar_lista_Producto()
+
+            else:
+                QMessageBox.information(self, "Advertencia", "Ha ocurrido un error. Reintente nuevamente")
+
+        else:
+            QMessageBox.information(self, "Advertencia", "Favor seleccionar un producto a eliminar")
+
+
     def Llamar_agregar(self):
         self.llamar_agregar = AgregarProducto()
         self.close()
+
 
     def llamar_menu(self):
         self.call = Menu()
         self.close()
 
-   
+
 
     #------------------------------Pantalla Agregar Inventario---------------------------------
 class AgregarProducto(QWidget):
