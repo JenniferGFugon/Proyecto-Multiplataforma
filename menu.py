@@ -12,6 +12,7 @@ from base_de_datos import VentaDB
 #variable global para modificacion de los empleados
 id 
 
+
 class Menu(QWidget):
     """ Ventanas del sistema. """
     
@@ -238,6 +239,7 @@ class VentanaInventario(QWidget):
         self.top_layout.addWidget(self.encabezadoInventario())
         self.setLayout(self.main_layout)
     
+
     def llenar_lista_Producto(self):
         """ Obtiene las tuplas de productos y las muestra en la lista """
         productos = self.basedatos.obtenerProducto()
@@ -249,9 +251,11 @@ class VentanaInventario(QWidget):
                     .format(producto[0], producto[1], producto[2], producto[3],
                      producto[4], producto[5]))
 
+
     def modificarProducto(self):
         self.modificaproducto = EditarProducto()
         self.close()
+
 
     def cargarDatosAModificarProducto(self):
         '''Carga los datos que seran modificados por el usuario'''
@@ -274,13 +278,14 @@ class VentanaInventario(QWidget):
             yes = QMessageBox.Yes
 
             if inventario:
-                question_text = f"¿Está seguro de eliminar el inventario {inventario[0]}?"
+                question_text = f"¿Está seguro de eliminar el producto {inventario[0]}?"
                 question = QMessageBox.question(self, "Advertencia", question_text,
                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
                 if question == QMessageBox.Yes:
                     self.basedatos.eliminar_Producto(inventario[0])
                     QMessageBox.information(self, "Información", "¡inventario eliminado satisfactoriamente!")
+                    QMessageBox.information(self, "Información", "¡producto eliminado satisfactoriamente!")
                     self.lista_inventario.clear()
                     self.llenar_lista_Producto()
 
@@ -294,11 +299,12 @@ class VentanaInventario(QWidget):
         self.llamar_agregar = AgregarProducto()
         self.close()
 
+
     def llamar_menu(self):
         self.call = Menu()
         self.close()
 
-   
+
 
     #------------------------------Pantalla Agregar Inventario---------------------------------
 class AgregarProducto(QWidget):
@@ -438,7 +444,7 @@ class AgregarProducto(QWidget):
         self.ventaInve = VentanaInventario()
         self.close()        
 #------------------------------------------------------------------------------------------------------------
-#----------------------------Pantalla Modificar Empleado----------------------------------------------------
+#----------------------------Pantalla Modificar Producto----------------------------------------------------
 class EditarProducto(QWidget):
     """ Ventana para Editar productos """
 
@@ -2048,7 +2054,7 @@ class VentanaLogin(QWidget):
             QMessageBox.information(
                 self, "Ingresar", "Verifique si su usuario o contraseña es correcto")
     
-    
+
 if __name__ == "__main__":
     
     app = QApplication(sys.argv)
