@@ -199,6 +199,8 @@ class VentanaInventario(QWidget):
         self.btn_eliminar_inventario = QPushButton("Eliminar Producto")
         self.btn_eliminar_inventario.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
+        self.btn_eliminar_inventario.clicked.connect(self.eliminar_inventario)   
+
         self.btn_eliminar_inventario.setFixedWidth(165)
         self.btn_eliminar_inventario.setFixedHeight(40)
 
@@ -260,6 +262,33 @@ class VentanaInventario(QWidget):
             self.modificarProducto()
         else:
             QMessageBox.information(self,"Informacion","No selecciono ningun producto")  
+
+    def eliminar_inventario(self):
+        """ Eliminar el inventario segun el id del producto """
+        if self.lista_inventario.selectedItems():
+            inventario = self.lista_inventario.currentItem().text()
+            id = inventario.split(" -- ")[0]
+
+            inventario = self.basedatos.obtenerProductoPorId(id)
+
+            yes = QMessageBox.Yes
+
+            if inventario:
+                question_text = f"¿Está seguro de eliminar el inventario {inventario[0]}?"
+                question = QMessageBox.question(self, "Advertencia", question_text,
+                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+                if question == QMessageBox.Yes:
+                    self.basedatos.eliminar_Producto(inventario[0])
+                    QMessageBox.information(self, "Información", "¡inventario eliminado satisfactoriamente!")
+                    self.lista_inventario.clear()
+                    self.llenar_lista_Producto()
+
+            else:
+                QMessageBox.information(self, "Advertencia", "Ha ocurrido un error. Reintente nuevamente")
+        
+        else:
+            QMessageBox.information(self, "Advertencia", "Favor seleccionar un producto a eliminar")
 
     def Llamar_agregar(self):
         self.llamar_agregar = AgregarProducto()
@@ -1211,6 +1240,7 @@ class ModificarCliente(QWidget):
                                          "color: \'white\';")
         btn_menu.setFont(fuente) 
 
+
 class empleados(QWidget):
     def __init__(self):
         super().__init__()
@@ -1333,7 +1363,7 @@ class empleados(QWidget):
         if empleados:
             for empleado in empleados:
                 self.lista_empleados.addItem(
-                    "{0} -- {1} -- {2} -- {3} -- {4} -- {5} -- {6} -- {7}"
+                    "{0} -- {1} -- {2} -- {3} -- {4} -- {5}-- {6} -- {7}"
                     .format(empleado[0], empleado[1], empleado[2], empleado[3],
                      empleado[4], empleado[5], empleado[6], empleado[7]))
 
@@ -1875,6 +1905,150 @@ class ModificarEmpleado(QWidget):
         self.pantalla = empleados() 
     ############################################################################
 
+class VentanaLogin(QWidget):
+    """ Ventana de login para que el usuario ingrese al sistema """
+
+    def __init__(self, parent=None):
+
+      super(VentanaLogin, self).__init__(parent)
+      self.basedatos = VentaDB("base_UMA.db")  
+      self.setWindowTitle("LOGIN")
+      self.setWindowIcon(QIcon("Logo.png"))
+      self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint)
+      self.setFixedSize(400, 380)
+      #Color de fondo de la ventana
+      paleta = QPalette()
+      paleta.setColor(QPalette.Background, QColor(229, 25, 25))
+      self.setPalette(paleta)
+
+      self.UI()
+      self.show()
+
+    def UI(self):
+      """ Cargar lo que es el diseño de la ventana """
+      self.encabezado()
+      self.widgets()
+      self.boton()
+
+
+    def encabezado(self):
+      """ Encabezado de la ventana """
+      #Color de fondo del encabezado
+      paleta = QPalette()
+      paleta.setColor(QPalette.Background, QColor(0, 0, 0))
+
+      frame = QFrame(self)
+      frame.setFrameShape(QFrame.NoFrame)
+      frame.setFrameShadow(QFrame.Sunken)
+      frame.setAutoFillBackground(True)
+      frame.setPalette(paleta)
+      frame.setFixedWidth(2000)
+      frame.setFixedHeight(84)
+      frame.move(0, 0)
+
+      logo = QLabel(frame)
+      logo.setFixedWidth(90)
+      logo.setFixedHeight(50)
+      logo.setPixmap(QPixmap("Logo.png").scaled(90, 90, Qt.KeepAspectRatio,
+                                                        Qt.SmoothTransformation))
+      logo.move(20, 12)
+
+      font = QFont()
+      font.setPointSize(19)
+      font.setBold(True) 
+
+      lbl_titulo = QLabel("<font color='white'>LOGIN</font>", frame)
+      lbl_titulo.setFont(font)
+      lbl_titulo.move(165, 25)
+
+    def widgets(self):      
+      """ Creacion de los respectivos widgets que forman parte de la interfaz """
+      # Usuario
+
+      lbl_Usuario = QLabel("Usuario", self)
+      lbl_Usuario.move(60, 120)
+      font = QFont()
+      font.setBold(True)
+      font.setPointSize(10)
+      font.setFamily("Bahnschrift Light")
+      lbl_Usuario.setFont(font)
+      frameUsuario = QFrame(self)
+      frameUsuario.setFrameShape(QFrame.StyledPanel)
+      frameUsuario.setFixedWidth(280)
+      frameUsuario.setFixedHeight(28)
+      frameUsuario.move(60, 146)
+
+      imagenUsuario = QLabel(frameUsuario)
+      imagenUsuario.setPixmap(QPixmap("user.png").scaled(20, 20, Qt.KeepAspectRatio,
+                                                              Qt.SmoothTransformation))
+      imagenUsuario.move(10, 4)
+
+      self.lineEditUsuario = QLineEdit(frameUsuario)
+      self.lineEditUsuario.setFrame(False)
+      self.lineEditUsuario.setTextMargins(8, 0, 4, 1)
+      self.lineEditUsuario.setFixedWidth(238)
+      self.lineEditUsuario.setFixedHeight(26)
+      self.lineEditUsuario.move(40, 1)
+
+      # Contraseña 
+
+      lbl_Contrasenia = QLabel("Contraseña", self)
+      lbl_Contrasenia.move(60, 200)
+      font = QFont()
+      font.setBold(True)
+      font.setPointSize(10)
+      font.setFamily("Bahnschrift Light")
+      lbl_Contrasenia.setFont(font)
+
+      frameContrasenia = QFrame(self)
+      frameContrasenia.setFrameShape(QFrame.StyledPanel)
+      frameContrasenia.setFixedWidth(280)
+      frameContrasenia.setFixedHeight(28)
+      frameContrasenia.move(60, 226)
+
+      imagenContrasenia = QLabel(frameContrasenia)
+      imagenContrasenia.setPixmap(QPixmap("lock.png").scaled(20, 20, Qt.KeepAspectRatio,
+                                                                     Qt.SmoothTransformation))
+      imagenContrasenia.move(10, 4)
+
+      self.lineEditContrasenia = QLineEdit(frameContrasenia)
+      self.lineEditContrasenia.setFrame(False)
+      self.lineEditContrasenia.setEchoMode(QLineEdit.Password)
+      self.lineEditContrasenia.setTextMargins(8, 0, 4, 1)
+      self.lineEditContrasenia.setFixedWidth(238)
+      self.lineEditContrasenia.setFixedHeight(26)
+      self.lineEditContrasenia.move(40, 1)
+
+    def boton(self):
+      """ Boton de iniciar sesion del login """
+      btn_login = QPushButton("Iniciar sesión", self)
+      btn_login.setFixedWidth(135)
+      btn_login.setFixedHeight(28)
+      btn_login.move(130, 296)
+      btn_login.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                       "color: \'white\';")
+      btn_login.clicked.connect(self.login)
+      font = QFont()
+      font.setBold(True)
+      font.setPointSize(10)
+      font.setFamily("Bahnschrift Light")
+      btn_login.setFont(font)
+    
+    def login(self):
+        """funcion donde se verificaran el user y password del empleado"""
+        usuario = (str(self.lineEditUsuario.text()))
+
+        self.contrasena = self.basedatos.obtenerUserandPassword(usuario)
+
+        if(str(self.contrasena[0])== str(self.lineEditContrasenia.text())):
+            QMessageBox.information(self, "Ingresar","Bienvenido a UMA")
+            self.ingresar = Menu()
+            self.close()
+        else:
+            QMessageBox.information(
+                self, "Ingresar", "Verifique si su usuario o contraseña es correcto")
+    
+    
 if __name__ == "__main__":
     
     app = QApplication(sys.argv)
@@ -1884,8 +2058,7 @@ if __name__ == "__main__":
     fuente.setFamily("Bahnschrift Light")
     fuente.setBold(True)
     app.setFont(fuente)
-
-    window = Menu()
+    window = VentanaLogin()
     window.show()
     sys.exit(app.exec_())
            
