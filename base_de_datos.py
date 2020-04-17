@@ -20,6 +20,7 @@ class VentaDB:
         self.queryTablaEmpleado(self.connection)
         self.queryTablaServicio(self.connection)
         self.queryTablaCliente(self.connection)
+        self.queryCategoria(self.connection)
 
     #--------------------CREACION DE TABLAS---------------
     #--------------------TABLA VENTA----------------------
@@ -51,7 +52,6 @@ class VentaDB:
         self.create_Table(conexión, self.detalle_query)         
 
     #---------------------TABLA PRODUCTO-------------------------
-<<<<<<< HEAD
     def  queryTablaProducto ( self , conexión ):
         self.producto_query  = """CREATE TABLE IF NOT EXISTS producto (
                                     idProducto integer PRIMARY KEY AUTOINCREMENT,
@@ -59,43 +59,22 @@ class VentaDB:
                                     nombreProducto text NOT NULL,
                                     precioCompra NUMERIC NO NULL,
                                     precioVenta NUMERIC NO NULL,
-                                    cantidad NUMERIC NO NULL
-=======
-    def queryTablaProducto(self,conexión):
-        self.producto_query ="""CREATE TABLE IF NOT EXISTS producto ( 
-                                    idProducto  integer PRIMARY KEY AUTOINCREMENT,
-                                    CategoriaProducto  text  NOT NULL,
-                                    nombreProducto  text NOT NULL,
-                                    precioCompra numeric NOT NULL ,
-                                    precioVenta numeric NOT NULL,
-                                    cantidad numeric NOT NULL
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
+                                    cantidad NUMERIC NO NULL"""
+        self.create_Table(conexión, self.producto_query)         
+                            
+
+    #------------------------TABLA CATEGORIA---------------------------------
+    def queryCategoria(self,conexión):                                
+        self.categoria_query ="""CREATE TABLE IF NOT EXISTS Categoria( 
+                                    idCategoria  integer PRIMARY KEY AUTOINCREMENT,
+                                    nombreCategoriaProducto  text  NOT NULL
                                   );
                                 """
-           
-        self.create_Table(conexión, self.producto_query)         
+  
+        self.create_Table(conexión, self.categoria_query)         
     
-<<<<<<< HEAD
-    #-----------------------Tabla Categoria Producto -----------------------------------------------
-    def queryTablaProductoCategoria(self, conexión):
-        self.producto_query="""CREATE TABLE IF NOT EXISTS categoriaProducto ( 
-                                    idCategoriaProducto integer PRIMARY KEY AUTOINCREMENT,
-                                    idTipoProducto   integer  NOT NULL,
-                                    nombreCategoria  text NOT NULL);"""
-        self.create_Table(conexión, self.producto_query)
-
-    #-----------------------TABLA REPUESTO-----------------------------------------    
-    def queryTablaProductoRepuesto(self, conexión):
-        self.producto_query= """CREATE TABLE IF NOT EXISTS repuesto (
-                                idRespuesto	integer PRIMARY KEY AUTOINCREMENT,
-                                marca	text not null,
-                                modelo	text not NULL,
-                                fabricante	text NOT NULL,
-                                exitencia	integer NOT NULL,
-                                costoCompra	numeric NOT NULL, 
-                                PrecioVenta	numeric NOT NULL
-                                """
-        self.create_Table(conexión, self.producto_query)
+   
+    
     
 
     #---------------------Tabla Productos Varios------------------------------------
@@ -110,8 +89,6 @@ class VentaDB:
                                     """
         self.create_Table(conexión, self.producto_query)
 
-=======
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
     #--------------------TABLA EMPLEADO-----------------------------
     def queryTablaEmpleado(self,conexión):
         self.empleado_query = """  CREATE TABLE IF NOT EXISTS empleado (
@@ -131,10 +108,7 @@ class VentaDB:
     def queryTablaServicio(self,conexión): 
         self.servicio_query = """CREATE TABLE IF NOT EXISTS servicio (
                                             idServicio INTEGER  PRIMARY KEY AUTOINCREMENT,
-<<<<<<< HEAD
                                             
-=======
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
                                             NombreServicio TEXT     NOT NULL,
                                             PrecioVenta NUMERIC    NOT NULL
                                             );
@@ -247,16 +221,11 @@ class VentaDB:
     def add_producto(self, TablaProducto):
         """ Realiza una inserción a la tabla de producto. """
         sqlInsert = """
-<<<<<<< HEAD
                     INSERT INTO Producto(
                         CategoriaProducto,
                         NombreProducto, PrecioCompra,
                         PrecioVenta, Cantidad
-=======
-                    INSERT INTO Producto(CategoriaProducto,
-                        NombreProducto,PrecioCompra,
-                        PrecioVenta,Cantidad
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
+                    
                     )
                     VALUES(?,?,?,?,?)    
                     """
@@ -293,7 +262,6 @@ class VentaDB:
 
 
 
-<<<<<<< HEAD
     #------------------VENTA----------------------
     def add_venta(self, venta):
         """ Realiza una inserción a la tabla de Venta. """
@@ -331,8 +299,6 @@ class VentaDB:
             
 
     #------------------ELIMINACION EN TABLAS-----------------
-=======
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
     #------------------TABLA EMPLEADOS----------------------
     def eliminar_empleado(self, id):
         """
@@ -415,6 +381,29 @@ class VentaDB:
             print(e)
 
         return None
+
+
+    def eliminar_venta(self, id):
+        """
+        Elimina una venta seleccionada .
+
+        param: id: El del id de la venta.
+        :return: True si la venta  se eliminó. None en caso contrario.
+        """
+        sqlQuery = "DELETE FROM detalle WHERE id_venta =  ? ; "
+        sqlQuery2 = "DELETE FROM venta WHERE id =  ?;"
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlQuery, (id,))
+            cursor.execute(sqlQuery2, (id,))
+
+            self.connection.commit()
+
+            return True
+        except Error as e:
+            print(e)
+
+        return None    
     #---------------OBTENCION DE DATOS DE LAS TABLAS---------
     #------------------TABLA EMPLEADOS-----------------------
     def obtenerEmpleados(self):
@@ -443,6 +432,20 @@ class VentaDB:
             return servicios
         except Error as e:
             print(e)
+
+
+    def obtenerCategoria(self):
+        """ Obtiene todas las tuplas de la tabla Categoria """
+        sqlQuery = " SELECT nombreCategoriaProducto FROM Categoria ORDER BY ROWID ASC "
+
+        try:
+            cursor = self.connection.cursor()
+            clientes = cursor.execute(sqlQuery).fetchall()
+
+            return clientes
+        except Error as e:
+            print(e)
+
 
     #----------------------- CLIENTE----------------------------------
     def obtenerCliente(self):
@@ -474,7 +477,6 @@ class VentaDB:
         except Error as e:
             print(e)
 
-<<<<<<< HEAD
     #------------------------VENTA-------------------------
     def obtenerVenta(self):
         '''Obtiene el numero de la venta'''
@@ -485,7 +487,29 @@ class VentaDB:
             return ventas
         except Error as e:
             print(e)
+    #-----------------VENTA----------------------------
+    def obtenerVentaPorId(self,id):
+        '''Obtiene el numero de la venta'''
+        sqlQuery = 'SELECT * FROM venta where id = ? ; '
+        try:
+            cursor = self.connection.cursor()
+            ventas = cursor.execute(sqlQuery,(id,)).fetchone()
+            return ventas
+        except Error as e:
+            print(e)        
 
+    #----------------------DETALLE DE VENTA -----------------
+    def obtenerDetalleVenta(self,id):
+        '''Obtiene el numero de la venta'''
+        sqlQuery = 'SELECT * FROM detalle where id_venta = ? ; '
+        try:
+            cursor = self.connection.cursor()
+            detalle = cursor.execute(sqlQuery,(id,)).fetchall()
+            return detalle
+        except Error as e:
+            print(e)        
+    
+    #----------------------VENTA-----------------------------
     def obtenerTablaVenta(self):
         '''Obtiene los campos de la tabla venta'''
         sqlQuery = 'SELECT * FROM venta ; '
@@ -508,7 +532,7 @@ class VentaDB:
         except Error as e:
             print(e) 
 
-
+    #-----------------------CLIENTES---------------------
     def ObtenerNombreClientes(self):
         '''Obtiene el nombre de los clientes
         para cargarlos en un ComboBox'''
@@ -520,7 +544,7 @@ class VentaDB:
         except Error as e:
             print(e) 
 
-
+    #-----------------EMPLEADOS------------------------
     def ObtenerNombreEmpleados(self):
         '''Obtiene el nombre de los empleados
         para cargarlos en un ComboBox'''
@@ -532,19 +556,19 @@ class VentaDB:
         except Error as e:
             print(e)                 
 
-
+    #----------------------PRODUCTO----------------------
     def ObtenerProducto(self,id):
         '''Obtiene los productos 
         Parametros : id valor '''
         sqlQuery = ''' SELECT idProducto,CategoriaProducto, nombreProducto ,precioVenta
-                        FROM producto where idProducto = ?;'''
+                        FROM producto where nombreProducto = ?;'''
         try:
             cursor = self.connection.cursor()
             producto = cursor.execute(sqlQuery,(id,)).fetchall()
             return producto
         except Error as e:
-            print(e)         
-=======
+            print(e)       
+
     #---------------------Obtener Producto-------------------
     def obtenerProducto(self):
         """ Obtiene todas las tuplas de la tabla Producto """
@@ -559,7 +583,6 @@ class VentaDB:
             print(e)
 
         return None
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
 
     #------------------MODIFICACION DE TABLAS---------------
     #---------------------TABLA Producto-------------------
@@ -604,10 +627,9 @@ class VentaDB:
             cursor.execute(sqlQuery,empleado)
             self.connection.commit()
         except Error as e:
-<<<<<<< HEAD
             print(e)     
 
-            
+    #---------------------TABLA CLIENTE----------------       
     def modificarClientePorId(self,cliente):
         '''Modifica datos del cliente
         Parametros : id  del cliente del cual se modificaran 
@@ -630,9 +652,9 @@ class VentaDB:
         except Error as e:
             print(e)                    
      
-=======
             print(e)    
-
+            
+    #------------------PRODUCTO--------------------
     def obtenerProductoPorId(self, id):
         """
         Busca un producto mediante el valor de id.
@@ -651,7 +673,6 @@ class VentaDB:
             print(e)
 
         return None     
->>>>>>> 6b44d7d6e8b9840de769bd4483a3b6b570ce1017
 
     def obtenerEmpleadosPorId(self, id):
         """
@@ -694,12 +715,11 @@ class VentaDB:
 
 
     def obtenerClientesPorId(self, id):
-        """
-        Busca un cliente mediante el valor del id.
+        """        Busca un cliente mediante el valor del id.
 
         param: id: El valor del id del empleado.
-        :return: Un arreglo con los atributos del empleado.
-        """
+        :return: Un arreglo con los atributos del empleado."""
+        
         sqlQuery = " SELECT *FROM Cliente WHERE idCliente =  ? ;"
 
         try:
