@@ -1,4 +1,4 @@
-from menu import Menu
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont, QIcon, QPalette, QColor, QPixmap
 from PyQt5.QtCore import Qt
