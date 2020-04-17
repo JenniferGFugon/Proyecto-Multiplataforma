@@ -25,10 +25,10 @@ class VentaDB:
     #--------------------TABLA VENTA----------------------
     def queryTabla(self,conexión):
 
-        self.venta_query = """ CREATE TABLE IF NOT EXISTS venta (
+        self.venta_query = """ CREATE TABLE IF NOT EXISTS venta(
                                     id integer PRIMARY KEY AUTOINCREMENT,
-                                    id_cliente integer NOT NULL,
-                                    id_empleado integer NOT NULL,
+                                    cliente text NOT NULL,
+                                    empleado text NOT NULL,
                                     total numeric NOT NULL 
                                   );
                                 """
@@ -285,6 +285,42 @@ class VentaDB:
         except Error as e:
             print(e)
 
+    #------------------VENTA----------------------
+    def add_venta(self, venta):
+        """ Realiza una inserción a la tabla de Venta. """
+        sqlInsert = """
+                    insert into venta( cliente,empleado,total) 
+                    values(?,?,?);
+                     
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert, venta)
+            self.connection.commit()
+        except Error as e:
+            print(e)  
+            
+    #------------------DETALLE----------------------
+    def add_detalle(self, detalle):
+        """ Realiza una inserción a la tabla de Detalle. """
+        sqlInsert = """
+                    insert into detalle( id_venta,id_producto,cantidad,
+                    precio,subtotal,descuento,isv)
+                    values(?,?,?,?,?,?,?);
+                     
+                    """
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sqlInsert, detalle)
+            self.connection.commit()
+        except Error as e:
+            print(e)                
+
+
+            
+
     #------------------ELIMINACION EN TABLAS-----------------
     #------------------TABLA EMPLEADOS----------------------
     def eliminar_empleado(self, id):
@@ -429,14 +465,24 @@ class VentaDB:
 
     #------------------------VENTA-------------------------
     def obtenerVenta(self):
-        '''Obtiene en numero de la venta'''
-        sqlQuery = 'SELECT * FROM venta ;  '
+        '''Obtiene el numero de la venta'''
+        sqlQuery = 'SELECT max(id) FROM venta ; '
+        try:
+            cursor = self.connection.cursor()
+            ventas = cursor.execute(sqlQuery).fetchone()
+            return ventas
+        except Error as e:
+            print(e)
+
+    def obtenerTablaVenta(self):
+        '''Obtiene los campos de la tabla venta'''
+        sqlQuery = 'SELECT * FROM venta ; '
         try:
             cursor = self.connection.cursor()
             ventas = cursor.execute(sqlQuery).fetchall()
             return ventas
         except Error as e:
-            print(e)
+            print(e)        
 
     #----------------------PRODUCTO------------------------
     def ObtenerNombreProductos(self):
@@ -449,6 +495,30 @@ class VentaDB:
             return productos
         except Error as e:
             print(e) 
+
+
+    def ObtenerNombreClientes(self):
+        '''Obtiene el nombre de los clientes
+        para cargarlos en un ComboBox'''
+        sqlQuery = "SELECT nombreCliente FROM cliente ;"
+        try:
+            cursor = self.connection.cursor()
+            productos = cursor.execute(sqlQuery).fetchall()
+            return productos
+        except Error as e:
+            print(e) 
+
+
+    def ObtenerNombreEmpleados(self):
+        '''Obtiene el nombre de los empleados
+        para cargarlos en un ComboBox'''
+        sqlQuery = "SELECT nombreEmpleado FROM empleado ;"
+        try:
+            cursor = self.connection.cursor()
+            productos = cursor.execute(sqlQuery).fetchall()
+            return productos
+        except Error as e:
+            print(e)                 
 
 
     def ObtenerProducto(self,id):

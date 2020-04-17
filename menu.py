@@ -396,7 +396,7 @@ class VentanaVentas(QWidget):
     """ Ventana de listado de ventas del sistema """
     def __init__(self):
         super().__init__()
-        
+        self.basedatos  = VentaDB("base_UMA.db")
         paleta = QPalette()
         paleta.setColor(QPalette.Background, QColor(229, 25, 25))
         self.setPalette(paleta)
@@ -411,6 +411,7 @@ class VentanaVentas(QWidget):
         self.encabezadoVentas()
         self.botonesVentas()
         self.layoutsVentas()
+        self.llenar_lista_venta()
 
     def encabezadoVentas(self):
         """ Encabezado de la ventana de ventas """
@@ -445,6 +446,7 @@ class VentanaVentas(QWidget):
     def botonesVentas(self):
         """ Botones que conforman la ventana de venta """
         self.lista_ventas = QListWidget()
+        #self.detalle_venta = Qlabel()
         self.btn_nueva_venta = QPushButton("Nueva Venta")
         self.btn_nueva_venta.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
@@ -452,11 +454,7 @@ class VentanaVentas(QWidget):
         self.btn_nueva_venta.setFixedHeight(40)
         self.btn_nueva_venta.clicked.connect(self.nuevaVenta)
 
-        self.btn_eliminar_venta = QPushButton("Eliminar Venta")
-        self.btn_eliminar_venta.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-                                         "color: \'white\';")
-        self.btn_eliminar_venta.setFixedWidth(165)
-        self.btn_eliminar_venta.setFixedHeight(40)
+       
 
         self.btn_menu = QPushButton("Menu Principal")
         self.btn_menu.setStyleSheet("background-color: rgb(0, 0, 0);\n"
@@ -465,11 +463,21 @@ class VentanaVentas(QWidget):
         self.btn_menu.setFixedWidth(165)
         self.btn_menu.setFixedHeight(40)
 
+    def llenar_lista_venta(self):
+        """ Obtiene las tuplas de ventas y las muestra en la lista """
+        ventas = self.basedatos.obtenerTablaVenta()
+
+        if ventas:
+            for venta in ventas:
+                self.lista_ventas.addItem(
+                    "{0} -- {1} -- {2} -- {3} "
+                    .format(venta[0], venta[1], venta[2], venta[3]))
+
 
     #funcion para  instanciar una variable de tipo AgregarVenta
     def nuevaVenta(self):
         self.NuevaVenta = AgregarVenta() 
-
+        self.close()
 
     def layoutsVentas(self):
         """ Layouts que componen la ventana de Venta. """
@@ -478,9 +486,8 @@ class VentanaVentas(QWidget):
         self.left_layout = QFormLayout()
         self.right_main_layout = QVBoxLayout()
         self.right_top_layout = QHBoxLayout()
-        self.right_bottom_layout = QHBoxLayout()
+        self.right_bottom_layout = QVBoxLayout()
         self.top_layout = QVBoxLayout()
-
         self.right_main_layout.addLayout(self.right_top_layout)
         self.right_main_layout.addLayout(self.right_bottom_layout)
         self.main_layout.addLayout(self.left_layout, 70)
@@ -490,7 +497,7 @@ class VentanaVentas(QWidget):
         self.left_layout.addWidget(self.lista_ventas)
         self.right_top_layout.addWidget(self.btn_nueva_venta)
         self.right_main_layout.addWidget(self.btn_menu)
-        self.right_bottom_layout.addWidget(self.btn_eliminar_venta)
+        #self.right_bottom_layout.addWidget(self.btn_eliminar_venta)
         self.top_layout.addWidget(self.encabezadoVentas())
         self.setLayout(self.main_layout)
 
@@ -1228,6 +1235,8 @@ class AgregarVenta(QWidget):
         self.layouts()
         self.ObtenerVenta()
         self.CargarComboBox()
+        self.CargarComboBoxClientes()
+        self.CargarComboBoxEmpleados()
 
 
     def encabezado(self):
@@ -1267,40 +1276,47 @@ class AgregarVenta(QWidget):
 
         self.lbl_num_venta = QLabel("Venta N°: ", self)
         self.lbl_num_venta.setFont(self.fuente)
-        self.lbl_num_venta.move(50, 100)
+        self.lbl_num_venta.move(20, 100)
         self.input_num_venta = QLineEdit(self)
-        self.input_num_venta.move(150, 100)
+        self.input_num_venta.move(120, 100)
         self.input_num_venta.setFixedWidth(100)
         self.lbl_cliente = QLabel("Cliente: ", self)
         self.lbl_cliente.setFont(self.fuente)
-        self.lbl_cliente.move(50, 150)
-        self.input_cliente = QLineEdit(self)
-        self.input_cliente.move(150, 150)
-        self.input_cliente.setFixedWidth(200)
-        self.lbl_id_empleado = QLabel("Id Empleado: ", self)
+        self.lbl_cliente.move(350, 100)
+        self.input_cliente = QComboBox(self)
+        self.input_cliente.move(450, 100)
+        self.input_cliente.setFixedWidth(150)
+        self.lbl_id_empleado = QLabel("Empleado: ", self)
         self.lbl_id_empleado.setFont(self.fuente)
-        self.lbl_id_empleado.move(150, 200)
-        self.input_id_empleado = QLineEdit(self)
-        self.input_id_empleado.move(200, 200)
+        self.lbl_id_empleado.move(20, 150)
+        self.input_id_empleado = QComboBox(self)
+        self.input_id_empleado.move(120, 150)
         self.input_id_empleado.setFixedWidth(200)  
         self.lbl_id_producto = QLabel("Id Producto: ", self)
         self.lbl_id_producto.setFont(self.fuente)
-        self.lbl_id_producto.move(50, 250)
+        self.lbl_id_producto.move(20, 200)
         self.input_id_producto = QComboBox(self)
-        self.input_id_producto.move(150, 250)
+        self.input_id_producto.move(120, 200)
         self.input_id_producto.setFixedWidth(200)
         self.lbl_cantidad_venta = QLabel("Cantidad: ", self)
         self.lbl_cantidad_venta.setFont(self.fuente)
-        self.lbl_cantidad_venta.move(50, 300)
+        self.lbl_cantidad_venta.move(350, 200)
         self.input_cantidad_venta = QLineEdit(self)
-        self.input_cantidad_venta.move(150, 300)
+        self.input_cantidad_venta.move(450, 200)
         self.input_cantidad_venta.setFixedWidth(100)
         self.lbl_descuento = QLabel("Descuento: ", self)
         self.lbl_descuento.setFont(self.fuente)
-        self.lbl_descuento.move(100, 280)
+        self.lbl_descuento.move(20, 250)
         self.input_descuento = QLineEdit(self)
-        self.input_descuento.move(200, 280)
+        self.input_descuento.move(120, 250)
         self.input_descuento.setFixedWidth(100)
+        self.lbl_total = QLabel("Total: ", self)
+        self.lbl_total.setFont(self.fuente)
+        self.lbl_total.move(20, 250)
+        self.input_total = QLineEdit(self)
+        self.input_total.move(120, 250)
+        self.input_total.setFixedWidth(100)
+       
         
 
     def botones(self):
@@ -1315,7 +1331,7 @@ class AgregarVenta(QWidget):
         self.btn_Agregar = QPushButton("Agregar", self)
         self.btn_Agregar.setFixedWidth(135)
         self.btn_Agregar.setFixedHeight(28)
-        self.btn_Agregar.move(390, 300)
+        self.btn_Agregar.move(250, 290)
         self.btn_Agregar.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
         self.btn_Agregar.setFont(fuente)
@@ -1324,34 +1340,55 @@ class AgregarVenta(QWidget):
         self.btn_guardar = QPushButton("Guardar Venta", self)
         self.btn_guardar.setFixedWidth(135)
         self.btn_guardar.setFixedHeight(28)
-        self.btn_guardar.move(390, 400)
+        self.btn_guardar.move(390, 450)
         self.btn_guardar.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                          "color: \'white\';")
         self.btn_guardar.setFont(fuente)
+        self.btn_guardar.clicked.connect(self.insertarVenta)
 
+        self.btn_cancelar = QPushButton("Cancelar", self)
+        self.btn_cancelar.setFixedWidth(135)
+        self.btn_cancelar.setFixedHeight(28)
+        self.btn_cancelar.move(390, 450)
+        self.btn_cancelar.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                         "color: \'white\';")
+        self.btn_cancelar.setFont(fuente)
+        self.btn_cancelar.clicked.connect(self.llamarMenu)
+
+    def llamarMenu(self):
+        self.call = VentanaVentas() 
+        self.close() 
         
+
     def layouts(self):
     
         self.main_layout = QVBoxLayout()
         self.left_layout = QFormLayout()
         self.right_main_layout = QVBoxLayout()
         self.middle_main_layout = QVBoxLayout()
+        self.top_main_layout = QHBoxLayout()
+
         self.main_layout.addLayout(self.left_layout, 50)
         self.main_layout.addLayout(self.right_main_layout, 40)
         self.main_layout.addLayout(self.middle_main_layout, 10)
+        self.main_layout.addLayout(self.top_main_layout, 10)
         self.right_main_layout.addWidget(self.lista_detalle)
-        self.middle_main_layout.addWidget(self.btn_guardar)
+        self.top_main_layout.addWidget(self.btn_guardar)
+        self.top_main_layout.addWidget(self.btn_cancelar)
 
-        #self.top_layout.addWidget(self.encabezadoEmpleado())
+        self.middle_main_layout.addWidget(self.lbl_total)
+        self.middle_main_layout.addWidget(self.input_total)
         self.setLayout(self.main_layout) 
 
     def ObtenerVenta(self):
+        idventa = 0
         venta = self.basedatos.obtenerVenta()
         if(venta):
-            pass
+            idventa = (venta[0] + 1)
+            self.input_num_venta.setText(str(idventa))
         else :
-            id =  1
-            self.input_num_venta.setText(str(id))
+            idventa =  1
+            self.input_num_venta.setText(str(idventa))
 
 
     def CargarComboBox(self):
@@ -1361,19 +1398,67 @@ class AgregarVenta(QWidget):
             self.input_id_producto.addItems(items[item])
 
 
+    def CargarComboBoxClientes(self):
+        'Carga clientes en el combobox'
+        items = self.basedatos.ObtenerNombreClientes()
+        for item in range(0 , len(items)):
+            self.input_cliente.addItems(items[item])
+
+    def CargarComboBoxEmpleados(self):
+        'Carga empleados en el combobox'
+        items = self.basedatos.ObtenerNombreEmpleados()
+        
+        for item in range(0 , len(items)):
+            self.input_id_empleado.addItems(items[item])        
+
+
+
     def CargarDetalle(self):
         'Carga el producto en el detalle de Venta' 
+        total = 0
         idproducto = (self.input_id_producto.currentIndex()+ 1)
         productos = self.basedatos.ObtenerProducto(idproducto)
         if productos:
-            self.lista_detalle.addItem("Codigo - Nombre - Tipo de Producto - Precio - cantidad - subTotal - descuento -isv ")
+            
             for producto in productos:
-                self.lista_detalle.addItem("{0}                -- {1}       -- {2}       -- {3} -- {4} -- {5}"
-                .format(
-                producto[0], producto[1], producto[2], producto[3],self.input_cantidad_venta.text(),
-               (producto[3] * int(self.input_cantidad_venta.text()))))
+                subtotal = (producto[3] * int(self.input_cantidad_venta.text()))
+                descuento = (subtotal * (int(self.input_descuento.text())/100)) 
+                isv = (subtotal - descuento) * 0.15
+                self.lista_detalle.addItem("""{0}           -- {1}    -- {2}            -- {3}       -- {4}          -- {5}         -- {6}    -- {7} """
+                .format(producto[0], producto[1], producto[2], producto[3],self.input_cantidad_venta.text(),
+                subtotal,descuento,isv))
+                total += (subtotal -descuento) + isv
+
+        self.input_total.setText(str(total))  
+        id_venta = int(self.input_num_venta.text())
+        tupladetalle = (id_venta, producto[0],
+                        self.input_cantidad_venta.text(),producto[3],subtotal,descuento,isv) 
+                    
+        self.basedatos.add_detalle(tupladetalle)  
+
+
+
+    def insertarVenta(self):
+        """ Insertar los valores del formulario a la tabla de empleado """
+        # Verificar si los valores requeridos fueron agregados
+        if (self.input_cantidad_venta.text() or
+                self.input_descuento.text()  != ""):
+            venta = (str(self.input_cliente.currentText()), str(self.input_id_empleado.currentText()),
+                        str(self.input_total.text()))  
+            
+            try:
+                self.basedatos.add_venta(venta)
+                QMessageBox.information(
+                    self, "Guardar", "Venta agregado correctamente")
+                self.close()
                 
-        
+                #self.llamar_empleados()
+            except Error as e:
+                QMessageBox.information(
+                    self, "Error", "Error al momento de agregar la venta")
+        else:
+            QMessageBox.information(
+                self, "Advertencia", "Debes ingresar toda la información")     
         
 
     
@@ -1508,7 +1593,7 @@ class AgregarEmpleado(QWidget):
                                          "color: \'white\';")
         self.btn_menu.setFont(fuente)
 
-    ###################################################################
+    
     def insertarEmpleado(self):
         """ Insertar los valores del formulario a la tabla de empleado """
         # Verificar si los valores requeridos fueron agregados

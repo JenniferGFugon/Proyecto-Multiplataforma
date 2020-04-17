@@ -10,7 +10,7 @@ import sys
 from PyQt5.QtGui import QIcon, QPalette, QColor, QPixmap, QFont
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
-from menu import Menu
+
 
 class VentanaLogin(QWidget):
     """ Ventana de login para que el usuario ingrese al sistema """
