@@ -230,7 +230,7 @@ class VentaDB:
 
         try:
             cursor = self.connection.cursor()
-            cursor.execute(sqlQuery, (id))
+            cursor.execute(sqlQuery, (id ,))
             self.connection.commit()
 
             return True
@@ -475,7 +475,27 @@ class VentaDB:
         except Error as e:
             print(e)
 
-        return None    
+        return None  
+
+    def obtenerUserandPassword(self, nameUser):
+        """
+        Buscara entre todos los empleados el empleado que contenga el 
+        Parametro
+        Nameuser = donde se encuentre el nombre usuario traera 
+        la contraseñan(pass)
+        """
+
+        sqlQuery = "SELECT pass from empleado WHERE userName = ? " 
+
+        try:
+            cursor = self.connection.cursor()
+            empleado = cursor.execute(sqlQuery, (nameUser,)).fetchone()
+
+            return empleado
+        except Error as e:
+            print(e)
+
+        return None  
 
     def create_Table(self, connexion, query):
         """
